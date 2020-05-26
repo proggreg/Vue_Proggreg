@@ -2,25 +2,26 @@
 <template>
   <div>
 
-     <ol>
+     <!-- <ol>
     <li  v-for="project in projects" :key='project.title'>
           <router-link v-bind:to="project.routerlink">
           <img src="../assets/snakegame.jpg">  
           </router-link>
-      <!-- <a v-bind:href="project.href"> {{project.title}} -->
-      <!-- </a> -->
     </li>
-  </ol>
+  </ol> -->
   </div>
 </template>
 
 <script>
 
-
 export default {
   name: 'ProjectsContainer',
-
-data:function() {
+  components: {
+  },
+  mounted() {
+    
+  },
+  data:function() {
     return  {
       projects:[
         { title: 'Snake Game',
@@ -29,6 +30,12 @@ data:function() {
     }
   }
 }
+
+
+// var p5canvas = p5.createCanvas(600,600);
+// p5canvas.parent('myContainer');
+
+
 
 </script>
 <style scoped>

@@ -1,5 +1,9 @@
 
-function Snake() {
+import * as p from 'p5';
+
+let scl = 20;
+
+export function Snake() {
   this.x = 0;
   this.y = 0;
   this.xspeed = 0;
@@ -13,18 +17,18 @@ function Snake() {
         this.tail[i] = this.tail[i+1];
       }
   }
-  this.tail[this.total-1] = createVector(this.x,this.y);
+  this.tail[this.total-1] = p.createVector(this.x,this.y);
   this.x = this.x + this.xspeed * scl;
   this.y = this.y + this.yspeed * scl;
 }
 
     this.show = function() {
-      fill(sc);
-      noStroke();
+      p.fill(sc);
+      p.noStroke();
         for (var i = 0; i < this.tail.length; i++) {
-          rect(this.tail[i].x,this.tail[i].y,scl,scl); // tail
+          p.rect(this.tail[i].x,this.tail[i].y,scl,scl); // tail
           }
-      rect(this.x,this.y,scl,scl); // snake
+      p.rect(this.x,this.y,scl,scl); // snake
     }
 
     this.dir = function(x,y) {

@@ -1,8 +1,13 @@
+import p5 from 'p5';
+
+import {Snake} from './snake.js';
+
+import 
+
 var s;
-var sc;
 var scl = 20;
 var food;
-var r,b,g,r2,g2,b2;
+
 var biteSound;
 var fr = 10;
 var score = 0;
@@ -11,11 +16,12 @@ var level = "levelOne";
 var levelDesc = 'Classic Snake';
 var dbg;
 
+export default function sketch(p) {
 
-function setup() {
- var cnvas = createCanvas(600,600);
- cnvas.position(windowWidth/2 - 300,windowHeight/2 - 300);
- frameRate(fr);
+ p.setup = function() {
+ var cnvas = p.createCanvas(600,600);
+ cnvas.position(p.windowWidth/2 - 300, p.windowHeight/2 - 300);
+ p.frameRate(fr);
 
  s = new Snake();
  biteSound = new Audio();
@@ -24,15 +30,12 @@ function setup() {
  r2 = 0;
  g2 = 0;
  b2 = 0;
- dbg = createP(levelDesc);
+ dbg = p.createP(levelDesc);
  dbg.style('font-size', '32px');
 }
 
 
-function draw() {
-
-
-
+p.draw = function () {
   if (score >= 5 &&score <  10) {
     level = 'levelTwo';
   } else if (score >= 10 &&score <  15) {
@@ -41,7 +44,7 @@ function draw() {
     level = 'levelFour';
   }
 dbg.html('Level: ' + levelDesc);
-dbg.position(windowWidth/2-300,100);
+dbg.position(p.windowWidth/2-300,100);
     switch (level) {
       case 'levelOne':
         levelOne();
@@ -56,7 +59,7 @@ dbg.position(windowWidth/2-300,100);
         break;
     }
 
-    background(r2,g2,b2);
+    p.background(r2,g2,b2);
     switch (gameMode) {
     case "MENU":
       loadMenu();
@@ -71,19 +74,19 @@ dbg.position(windowWidth/2-300,100);
       die();
   }
 
-  dbg.html(s.x + " " + s.y);
+  // dbg.html(s.x + " " + s.y);
 }
 
 
 
 function loadMenu() {
-  background(0);
-  fill(100);
-  rectMode(CENTER);
-  fill(255);
-  textSize(20);
-  textAlign(CENTER);
-  text("Press Button To Begin", width / 2, height / 2);
+  p.background(0);
+  p.fill(100);
+  p.rectMode(CENTER);
+  p.fill(255);
+  p.textSize(20);
+  p.textAlign(CENTER);
+  p.text("Press Button To Begin", width / 2, height / 2);
     if (keyIsPressed) {
       gamemode = "PLAY";
     }
@@ -129,9 +132,9 @@ function resetGame() {
   g = 255;
   b = 0;
   sc = color(0,255,0);
-  textAlign(CENTER);
-  textSize(24);
-  text("You Died :(", width/2, height/2);
+  p.textAlign(CENTER);
+  p.textSize(24);
+  p.text("You Died :(", width/2, height/2);
   var cols = floor(width/scl);
   var rows = floor(height/scl);
   s.x = floor(random(cols));
@@ -143,6 +146,7 @@ function resetGame() {
 
 // fix death caused by going backwards
 
+// eslint-disable-next-line no-unused-vars
 function keyPressed() {
   gameMode = "PLAY";
   if (keyCode === UP_ARROW && !s.dir(0,1)) {
@@ -154,5 +158,7 @@ function keyPressed() {
   } else if (keyCode === LEFT_ARROW) {
     s.dir(-1,0);
   }
+
+}
 
 }

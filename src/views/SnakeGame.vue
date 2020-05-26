@@ -3,9 +3,10 @@
 
 <template>
   <div class="snakegame">
-      <canvas  width="400" height="400" id='canvas'/> 
+      <canvas  width="600" height="600" id='canvas'/> 
 
-      <button @click="eat()">click</button>
+      <button v-text="controlMessage" @click="startStop()"></button>
+      <h3>{{score}}</h3>
   </div>  
 </template>
 
@@ -25,12 +26,14 @@ export default {
         tail: []
       }
       this.food = {
-        x: 0,
-        y: 0
+        x: this.randomint(this.canvas.width / this.scale) * this.scale,
+        y: this.randomint(this.canvas.height / this.scale) * this.scale
       }
       this.timer = setInterval(this.draw,200);
       this.snakePos(0,0);
       window.addEventListener("keydown",this.handleGlobalKeyDown);
+
+      this.snake.tail[0] = {x:0,y:0};
     },
     data: function() {
       return {
@@ -39,12 +42,14 @@ export default {
         scale: 20,
         snake: {
           x: 0,
-          y: 0
-        } ,
-        timer: null,
-        keyCode: '',
+          y: 0,
+          tail: []
+        },
+        timer: null, 
         dir: 'right',
-        score: 0
+        score: 0,
+        running: false,
+        controlMessage: 'Play'
       }
     },
     methods: {
@@ -58,22 +63,22 @@ export default {
         this.vueCanvas.fill();
       },
       snakePos:function(x,y) {
-        // console.log('move snake')
         this.snake.x  = x;
-        this.snake.y  = y;
-
-       
-
-        this.vueCanvas.beginPath();
-        this.vueCanvas.rect(this.snake.x,this.snake.y,this.scale,this.scale);
-        for (var i = 0; i < this.snake.tail.length; i++) {
-          this.vueCanvas.rect(this.snake.tail[i].x,this.snake.tail[i].y,this.scale,this.scale); // tail
+        this.snake.y  = y;  
+        // if (this.score === this.snake.tail.length) {
+          for (let i = 0; i < this.snake.tail.length-1; i++) {
+              this.snake.tail[i] = this.snake.tail[i+1];
+            }
+        // }
+        this.snake.tail[this.score] = {x,y};
+        this.vueCanvas.beginPath(); 
+        
+        for (let i = 0; i < this.snake.tail.length; i++) {
+          this.vueCanvas.fillStyle = 'green';
+          this.vueCanvas.fillRect(this.snake.tail[i].x,this.snake.tail[i].y,this.scale,this.scale); // tail
         }
-        this.vueCanvas.fillStyle = 'green';
-        this.vueCanvas.fill();
       },
       move(d) {
-        // console.log(d);
         if (d === 'up') {
           this.snakePos(this.snake.x, this.snake.y - this.scale)
         } else if(d === 'right'){
@@ -86,10 +91,30 @@ export default {
       }
       ,
       draw() {
-        this.vueCanvas.clearRect(0,0,this.canvas.width,this.canvas.height);
-        this.move(this.dir);
-        this.eat();
-        this.drawfood();        
+        this.drawGrid();
+        if (this.running) {
+          this.vueCanvas.clearRect(0,0,this.canvas.width,this.canvas.height);
+          this.move(this.dir);
+          this.eat();
+          this.drawfood();  
+          this.death();
+        }      
+      },
+      drawGrid() {
+        this.vueCanvas.strokeStyle = 'white';
+        for (let y = 0; y < this.canvas.height; y+=this.scale) {
+          for (let x =0; x < this.canvas.width; x+=this.scale) {
+            this.vueCanvas.beginPath();
+            this.vueCanvas.moveTo(x,0);
+            this.vueCanvas.lineTo(x,this.canvas.height);
+            this.vueCanvas.stroke()
+
+            this.vueCanvas.beginPath();
+            this.vueCanvas.moveTo(0,y);
+            this.vueCanvas.lineTo(this.canvas.height,y);
+            this.vueCanvas.stroke();
+          } 
+        }
       },
       handleGlobalKeyDown(e) {
         var kc = e.keyCode
@@ -108,38 +133,39 @@ export default {
           this.food.x = this.randomint(this.canvas.width / this.scale) * this.scale;
           this.food.y = this.randomint(this.canvas.height / this.scale) * this.scale;
           this.score++;
-
-          this.snake.tail.push({x: 20,y:20});
         }
+      },
+      startStop() {
+        this.controlMessage = this.running ? 'Play' : 'Pause';
+        this.running = !this.running;
+      },
+      death() {
 
-        console.log(this.snake.tail);
+          if (this.snake.x < 0 ||
+              this.snake.x > this.canvas.width ||
+              this.snake.y < 0 ||
+              this.snake.y > this.canvas.height) {
+              this.die();
+          }
         
-
+          for (let i = 1; i < this.snake.tail.length - 1;i++) {
+          let pos = this.snake.tail[i];
+          let d = Math.sqrt(Math.pow((this.snake.x-pos.x), 2) + Math.pow((this.snake.y-pos.y), 2));
+            if (d < 1) {
+                  this.die();
+                  // gameMode = "RESET";
+                  console.log(d);
+                  console.log('died');
+            }
+          }  
+      }, die(){
+        this.snake.tail = [];
+        this.score = 0;
       }
-      
+
+
     }
-}
-
-
-// function checkKeyPress(key) {
-//         var kc = key.keyCode
-//         if (kc === 38) {
-//           this.dir = 'up'
-//         } else if(kc === 39){
-//             this.dir = 'right'
-//         } else if(kc === 40) {
-//           this.dir = 'down'
-//         } else if(kc === 37) {
-//           this.dir = 'left'
-//         }
-
-//         this.$el.move(this.dir);
-//         console.log(this.dir);
-//       }
-// window.addEventListener("keydown", checkKeyPress, false);
-
-
-  
+}  
 
 </script>
 <style scoped>
