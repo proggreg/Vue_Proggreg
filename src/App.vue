@@ -1,60 +1,42 @@
-<template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+/* eslint-disable */
+<template >
+  <v-app class="primary" id="app">
+    <Header />
+    <v-main class>
+      <div style="height: 100px">
+        <ProjectsGrid />
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-content>
-      <HelloWorld/>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import Header from "./components/Header";
+import Tabs from "./components/Tabs";
+import ProjectsGrid from "./components/ProjectsGrid";
+import AboutMe from "./components/AboutMe";
+import Contact from "./components/Contact";
 
 export default {
-  name: 'App',
-
   components: {
-    HelloWorld,
-  },
-
-  data: () => ({
-    //
-  }),
+    Header,
+    Tabs,
+    ProjectsGrid,
+    AboutMe,
+    Contact
+  }
 };
 </script>
+
+<style lang="scss">
+html {
+  overflow-y: unset !important;
+}
+
+html,
+body,
+#app {
+  font-family: "Exo 2", sans-serif;
+  height: 100% !important;
+}
+</style>

@@ -1,13 +1,13 @@
+/* eslint-disable no-undef */
 import p5 from 'p5';
 
 import {Snake} from './snake.js';
 
-import 
-
 var s;
+var sc;
 var scl = 20;
 var food;
-
+var r,b,g,r2,g2,b2;
 var biteSound;
 var fr = 10;
 var score = 0;
@@ -16,9 +16,9 @@ var level = "levelOne";
 var levelDesc = 'Classic Snake';
 var dbg;
 
-export default function sketch(p) {
+export default function sketch() {
 
- p.setup = function() {
+ p5.setup = function() {
  var cnvas = p.createCanvas(600,600);
  cnvas.position(p.windowWidth/2 - 300, p.windowHeight/2 - 300);
  p.frameRate(fr);
@@ -134,7 +134,7 @@ function resetGame() {
   sc = color(0,255,0);
   p.textAlign(CENTER);
   p.textSize(24);
-  p.text("You Died :(", width/2, height/2);
+  text("You Died :(", width/2, height/2);
   var cols = floor(width/scl);
   var rows = floor(height/scl);
   s.x = floor(random(cols));
@@ -146,7 +146,6 @@ function resetGame() {
 
 // fix death caused by going backwards
 
-// eslint-disable-next-line no-unused-vars
 function keyPressed() {
   gameMode = "PLAY";
   if (keyCode === UP_ARROW && !s.dir(0,1)) {

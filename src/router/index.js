@@ -1,37 +1,38 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import goTo from "vuetify/es5/services/goto";
+// import ProjectsGrid from '../components/ProjectsGrid.vue'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-  const routes = [
+const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/",
+    name: "Home",
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: "/ProjectsGrid",
+    name: "ProjectsGrid",
+    component: () =>
+      import(
+        /* webpackChunkName: "projectsgrid" */ "../components/ProjectsGrid.vue"
+      ),
   },
-  {
-    path: '/projects',
-    name: 'Projects',
-    component: () => import(/* webpackChunkName: "projects" */ '../views/Projects.vue')
-  },
-  {
-    path: '/snakegame',
-    name: 'SnakeGame',
-    component: () => import(/* webpackChunkName: "projects" */ '../views/SnakeGame.vue')
-  }
-]
+];
 
 const router = new VueRouter({
-  routes
-})
+  scrollBehavior: (to, from, savedPosition) => {
+    let scrollTo = 0;
 
-export default router
+    if (to.hash) {
+      scrollTo = to.hash;
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y;
+    }
+
+    return goTo(scrollTo);
+  },
+  routes,
+});
+
+export default router;
