@@ -2,28 +2,25 @@
 <template >
   <v-app class="primary" id="app">
     <Header />
-    <v-main class>
-      <div style="height: 100px">
-        <ProjectsGrid />
-      </div>
+    <v-main>
+      <v-container fluid>
+        <v-layout justify-center align-center>
+          <v-card width="80%" min-height="500px" class="pa-12">
+            <!-- content -->
+            <router-view />
+          </v-card>
+        </v-layout>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import Header from "./components/Header";
-import Tabs from "./components/Tabs";
-import ProjectsGrid from "./components/ProjectsGrid";
-import AboutMe from "./components/AboutMe";
-import Contact from "./components/Contact";
 
 export default {
   components: {
-    Header,
-    Tabs,
-    ProjectsGrid,
-    AboutMe,
-    Contact
+    Header
   }
 };
 </script>

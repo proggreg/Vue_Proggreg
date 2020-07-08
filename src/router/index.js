@@ -1,12 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import goTo from "vuetify/es5/services/goto";
-// import ProjectsGrid from '../components/ProjectsGrid.vue'
+
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/",
     name: "Home",
   },
@@ -15,7 +14,26 @@ const routes = [
     name: "ProjectsGrid",
     component: () =>
       import(
-        /* webpackChunkName: "projectsgrid" */ "../components/ProjectsGrid.vue"
+        /* webpackChunkName: "projectsgrid" */
+        "../components/ProjectsGrid.vue"
+      ),
+  },
+  {
+    path: "/AboutMe",
+    name: "AboutMe",
+    component: () =>
+      import(
+        /* webpackChunkName: "aboutme" */
+        "../components/AboutMe.vue"
+      ),
+  },
+  {
+    path: "/Contact",
+    name: "Contact",
+    component: () =>
+      import(
+        /* webpackChunkName: "contact" */
+        "../components/Contact.vue"
       ),
   },
 ];

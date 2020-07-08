@@ -7,11 +7,13 @@
         <Tabs />
       </template>
       <v-btn
+        class="primary"
         style="position: absolute; right: 2%"
         @click="$vuetify.theme.dark=!$vuetify.theme.dark"
         v-if="$vuetify.theme.dark"
       >Light Mode</v-btn>
       <v-btn
+        class="primary"
         style="position: absolute; right: 2%"
         @click="$vuetify.theme.dark=!$vuetify.theme.dark"
         v-else

@@ -1,6 +1,6 @@
 <template>
   <v-tabs v-model="tabs.title" class="projects" fixed-tabs>
-    <v-tab :key="tab.title" v-for="tab in tabs">
+    <v-tab :to="tab.component" :key="tab.title" v-for="tab in tabs">
       <v-icon>{{tab.icon}}</v-icon>
       {{tab.title}}
     </v-tab>
@@ -16,15 +16,18 @@ export default {
       tabs: [
         {
           title: "Projects",
-          icon: "mdi-code-braces"
+          icon: "mdi-code-braces",
+          component: "/ProjectsGrid"
         },
         {
           title: "AboutMe",
-          icon: "mdi-account-circle"
+          icon: "mdi-account-circle",
+          component: "/AboutMe"
         },
         {
           title: "Contact",
-          icon: "mdi-at"
+          icon: "mdi-at",
+          component: "/Contact"
         }
       ]
     };

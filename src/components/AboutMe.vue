@@ -1,3 +1,7 @@
 <template>
-  <v-sheet style="margin: 0 auto" width="80%" height="80%" elevation="24"></v-sheet>
+  <div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis lacinia felis quis varius. Nullam scelerisque eleifend facilisis. Cras id tortor nec risus consectetur volutpat. Vestibulum eu est quam. Donec eget varius leo, et bibendum enim. Nullam in mauris ac mauris bibendum volutpat eu eget augue. Maecenas in nisl consectetur, condimentum tortor nec, laoreet nunc.</p>
+    <p>Morbi viverra, risus a cursus commodo, erat velit egestas diam, non pellentesque libero quam et diam. Pellentesque accumsan, eros et porttitor tincidunt, arcu erat tempor purus, eu sodales orci ante ac purus. Maecenas luctus augue nunc, a semper urna pellentesque in. Suspendisse eleifend sed magna sed egestas. Duis et elementum neque. Donec iaculis tellus diam, iaculis auctor elit vestibulum congue. Curabitur convallis feugiat est sed feugiat. Integer egestas est suscipit felis pharetra, vel condimentum risus facilisis. Proin viverra velit nec mattis luctus. Maecenas auctor placerat tempus.</p>
+    <p>In quam nunc, lacinia a tempus in, efficitur sit amet neque. Maecenas imperdiet tortor tortor, a pharetra mi ullamcorper eu. Etiam pharetra commodo neque id consequat. Sed eu neque ipsum. Curabitur viverra justo vitae orci molestie tincidunt. Donec placerat odio purus, at consectetur diam condimentum at. Aliquam erat volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean vitae molestie tellus. Aliquam sed rutrum tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean eu enim purus.</p>
+  </div>
 </template>
