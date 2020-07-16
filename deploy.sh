@@ -10,4 +10,6 @@ git add -A
 git commit -m 'deploy'
 git push -f git@github.com:proggreg/Vue_Proggreg.git master:gh-pages
 
+echo deployed to https://proggreg.github.io/Vue_Proggreg/
+
 cd -

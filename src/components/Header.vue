@@ -9,13 +9,13 @@
       <v-btn
         class="primary"
         style="position: absolute; right: 2%"
-        @click="$vuetify.theme.dark=!$vuetify.theme.dark"
+        @click="godark()"
         v-if="$vuetify.theme.dark"
       >Light Mode</v-btn>
       <v-btn
         class="primary"
         style="position: absolute; right: 2%"
-        @click="$vuetify.theme.dark=!$vuetify.theme.dark"
+        @click="godark()"
         v-else
       >Dark Mode</v-btn>
     </v-toolbar>
@@ -27,6 +27,11 @@ export default {
   name: "Header",
   components: {
     Tabs
+  },
+  methods: {
+    godark() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    }
   },
   data: () => ({})
 };
