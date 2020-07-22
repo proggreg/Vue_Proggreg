@@ -38,6 +38,5 @@ body,
 #app {
   font-family: "Exo 2", sans-serif;
   height: 100% !important;
-  touch-action: none;
 }
 </style>

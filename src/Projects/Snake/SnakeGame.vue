@@ -298,6 +298,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.snakegame {
+  touch-action: none;
+}
 .border {
   border: 1px;
   border-style: solid;
