@@ -4,6 +4,7 @@
       <v-row>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 class="text-center">Current Score: {{score}}</h3>
+          <v-card-text v-model="dir" v-text="dir" class="text-center"></v-card-text>
           <v-layout class="border">
             <canvas width="200" height="200" class="absolute-center" id="canvas" />
           </v-layout>
@@ -53,12 +54,19 @@ export default {
       controlMessage: "Start",
       gameState: "SETUP",
       frameRate: 0,
+      xDown: null,
+      yDown: null,
     };
   },
   methods: {
     start() {
       // add event listener to listen for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
+
+      // Mobile control listeners
+      document.addEventListener("touchstart", this.handleTouchStart, false);
+      document.addEventListener("touchmove", this.handleTouchMove, false);
+
       // find and setup canvas
       var canvas = this.$el.querySelector("canvas");
       this.canvas = canvas;
@@ -240,6 +248,51 @@ export default {
     reset() {
       console.log("reset");
       this.gameState = "SETUP";
+    },
+    getTouches(evt) {
+      console.log("hello");
+      return (
+        evt.touches || evt.originalEvent.touches // browser API
+      ); // jQuery
+    },
+    handleTouchStart(evt) {
+      const firstTouch = this.getTouches(evt)[0];
+      this.xDown = firstTouch.clientX;
+      this.yDown = firstTouch.clientY;
+    },
+    handleTouchMove(evt) {
+      if (!this.xDown || !this.yDown) {
+        return;
+      }
+
+      var xUp = evt.touches[0].clientX;
+      var yUp = evt.touches[0].clientY;
+
+      var xDiff = this.xDown - xUp;
+      var yDiff = this.yDown - yUp;
+
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        /*most significant*/
+        if (xDiff > 0) {
+          /* left swipe */
+
+          this.dir = "left";
+        } else {
+          /* right swipe */
+          this.dir = "right";
+        }
+      } else {
+        if (yDiff > 0) {
+          /* up swipe */
+          this.dir = "up";
+        } else {
+          /* down swipe */
+          this.dir = "down";
+        }
+      }
+      /* reset values */
+      this.xDown = null;
+      this.yDown = null;
     },
   },
 };

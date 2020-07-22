@@ -20,11 +20,11 @@ import Header from "./components/Header";
 
 export default {
   components: {
-    Header
+    Header,
   },
   mounted() {
     this.$router.push("/ProjectsGrid");
-  }
+  },
 };
 </script>
 
@@ -38,5 +38,6 @@ body,
 #app {
   font-family: "Exo 2", sans-serif;
   height: 100% !important;
+  touch-action: none;
 }
 </style>

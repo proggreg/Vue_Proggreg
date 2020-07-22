@@ -1,20 +1,20 @@
 <template>
   <v-card class="Header secondary">
     <v-toolbar class="myClass" extended elevation="20">
-      <v-toolbar-title class="headerTitle">Prog:greg</v-toolbar-title>
+      <v-toolbar-title class="headerTitle font-weight-bold font">Prog:greg</v-toolbar-title>
 
       <template v-slot:extension>
         <Tabs />
       </template>
       <v-btn
         class="primary"
-        style="position: absolute; right: 2%"
+        style="position: absolute; right: 2%; font-size: 0.5em; padding: 5px"
         @click="godark()"
         v-if="$vuetify.theme.dark"
       >Light Mode</v-btn>
       <v-btn
         class="primary"
-        style="position: absolute; right: 2%"
+        style="position: absolute; right: 2%;font-size: 0.5em; padding: 5px"
         @click="godark()"
         v-else
       >Dark Mode</v-btn>
@@ -26,14 +26,14 @@ import Tabs from "./Tabs";
 export default {
   name: "Header",
   components: {
-    Tabs
+    Tabs,
   },
   methods: {
     godark() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    }
+    },
   },
-  data: () => ({})
+  data: () => ({}),
 };
 </script>
 <style  lang="scss">
@@ -51,7 +51,7 @@ export default {
   }
 
   .headerTitle {
-    font-size: 2rem;
+    font-size: 2.5rem;
     cursor: default;
     user-select: none;
   }

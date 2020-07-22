@@ -1,8 +1,17 @@
 <template>
   <v-form class="saveScoreForm" @submit.prevent="sendData()">
-    <v-card-text v-if="this.error">Name is required.</v-card-text>
-    <v-text-field class="text-center" v-model="username" placeholder="Username"></v-text-field>
-    <v-card-text class="text-center" v-model="score">Your Score: {{score}}</v-card-text>
+    <v-card-text class="text-center red--text font-weight-bold" v-if="this.error">Name is required.</v-card-text>
+    <v-text-field
+      style="width: max-content; margin: 0 auto; font-size: 3em"
+      class="text-center"
+      v-model="username"
+      placeholder="Username"
+    ></v-text-field>
+    <v-card-text
+      style="font-size: 3em"
+      class="text-center font-weight-bold"
+      v-model="score"
+    >Your Score: {{score}}</v-card-text>
     <!-- Name should be required -->
     <v-btn
       @click="checkName"

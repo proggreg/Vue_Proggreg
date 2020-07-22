@@ -6,7 +6,6 @@
         <v-card
           class="ma-4 pa-12 card primary"
           hover
-          v-if="project.complete"
           v-for="project in projects"
           :key="project.title"
           outlined
