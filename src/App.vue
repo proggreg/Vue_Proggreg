@@ -22,7 +22,9 @@ export default {
   components: {
     Header
   },
-  mounted() {}
+  mounted() {
+    this.$router.push("/ProjectsGrid");
+  }
 };
 </script>
 

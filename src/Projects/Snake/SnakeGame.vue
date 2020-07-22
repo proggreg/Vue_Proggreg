@@ -1,25 +1,22 @@
-
-
-
 <template>
   <div class="snakegame">
     <v-container fluid>
       <v-row>
-        <v-col>
+        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
-            <canvas class="absolute-center" id="canvas" />
+            <canvas width="200" height="200" class="absolute-center" id="canvas" />
           </v-layout>
           <v-btn
-            v-text="controlMessage"
-            @click="startStop()"
+            v-if="this.controlMessage =='Start'"
+            v-text="this.controlMessage"
+            @click="start()"
             class="mr-4 primary"
             style="display: flex; margin: 20px auto 0 auto !important; "
-          >Save</v-btn>
+          ></v-btn>
         </v-col>
-
-        <v-col>
-          <ScoreBoard ref="scoreBoard" />
+        <v-col style="flex-basis: unset">
+          <ScoreBoard v-on:LoadGame="this.reset" v-if="gameState === 'END'" ref="scoreBoard" />
         </v-col>
       </v-row>
     </v-container>
@@ -27,114 +24,120 @@
 </template>
 <script>
 import ScoreBoard from "./ScoreBoard";
-
 export default {
   name: "Snake",
   components: {
-    ScoreBoard
+    ScoreBoard,
   },
-  mounted() {
-    var canvas = this.$el.querySelector("canvas");
-    this.canvas = canvas;
-    this.vueCanvas = this.canvas.getContext("2d");
-    this.vueCanvas.left = "400px";
-    this.food = {
-      x: this.getRandomGrid(canvas.width),
-      y: this.getRandomGrid(canvas.height)
-    };
-    this.timer = setInterval(this.draw, 200); // draw every 200ms (5 Frames per second)
-    window.addEventListener("keydown", this.handleGlobalKeyDown);
-
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-  },
-  data: function() {
+  mounted() {},
+  data() {
     return {
+      fpsInterval: 200, // 5 Frames Per Second
+      now: 0,
+      then: 0,
+      elapsed: 0,
       vueCanvas: null,
       canvas: null,
       width: 200,
       height: 200,
       scale: 20,
       snake: {
-        x: 0,
-        y: 0,
-        tail: [{ x: 0, y: 0 }]
+        body: [{ x: 0, y: 0 }],
       },
       food: {
-        x: this.getRandomGrid(this.width),
-        y: this.getRandomGrid(this.height)
+        x: 100,
+        y: 100,
       },
-      timer: null,
       dir: "right",
       score: 0,
-      controlMessage: "Play",
+      controlMessage: "Start",
       gameState: "SETUP",
-      fontColor: this.$vuetify.theme.themes.light.primary
+      frameRate: 0,
     };
   },
   methods: {
+    start() {
+      // add event listener to listen for arrow key presses
+      window.addEventListener("keydown", this.handleGlobalKeyDown);
+      // find and setup canvas
+      var canvas = this.$el.querySelector("canvas");
+      this.canvas = canvas;
+      this.vueCanvas = this.canvas.getContext("2d");
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+      this.controlMessage = "";
+      this.running = !this.running;
+      this.gameState = "RUNNING";
+      requestAnimationFrame(this.draw);
+    },
     getRandomGrid(max) {
       return (
         Math.floor(Math.random() * Math.floor(max / this.scale)) * this.scale
       );
     },
-    invertColor: function(rgb) {
-      /* eslint-disable*/
-      rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
-      for (var i = 0; i < rgb.length; i++) {
-        rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
-      }
-      return rgb;
-    },
-    drawfood: function() {
+    drawfood: function () {
       this.vueCanvas.beginPath();
-      this.vueCanvas.rect(this.food.x, this.food.y, this.scale, this.scale);
       this.vueCanvas.fillStyle = "red";
+      this.vueCanvas.rect(this.food.x, this.food.y, this.scale, this.scale);
       this.vueCanvas.fill();
     },
-    snakePos: function(x, y) {
-      // update snakes position
-      this.snake.x = x;
-      this.snake.y = y;
-      // if (this.score === this.snake.tail.length) {
-      for (let i = 0; i < this.snake.tail.length - 1; i++) {
-        this.snake.tail[i] = this.snake.tail[i + 1];
+    updateSnake: function (x, y) {
+      for (let i = 0; i < this.snake.body.length - 1; i++) {
+        this.snake.body[i] = this.snake.body[i + 1];
       }
-      // }
-      this.snake.tail[this.score] = { x, y };
+      this.snake.body[this.score] = { x, y };
 
       // draw snake
-      this.vueCanvas.beginPath();
-      for (let i = 0; i < this.snake.tail.length; i++) {
-        this.vueCanvas.fillStyle = "rgb(0, 255, 0)";
-        this.vueCanvas.fillRect(
-          this.snake.tail[i].x,
-          this.snake.tail[i].y,
-          this.scale,
-          this.scale
-        ); // tail
-      }
+      this.vueCanvas.fillStyle = "rgb(0,255,0)";
+      this.snake.body.forEach((body) =>
+        this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale)
+      );
     },
-    move(d) {
+    moveSnake(d) {
+      let headpos = this.snake.body.length - 1;
       if (d === "up") {
-        this.snakePos(this.snake.x, this.snake.y - this.scale);
+        this.updateSnake(
+          this.snake.body[headpos].x,
+          this.snake.body[headpos].y - this.scale
+        );
       } else if (d === "right") {
-        this.snakePos(this.snake.x + this.scale, this.snake.y);
+        this.updateSnake(
+          this.snake.body[headpos].x + this.scale,
+          this.snake.body[headpos].y
+        );
       } else if (d === "down") {
-        this.snakePos(this.snake.x, this.snake.y + this.scale);
+        this.updateSnake(
+          this.snake.body[headpos].x,
+          this.snake.body[headpos].y + this.scale
+        );
       } else if (d === "left") {
-        this.snakePos(this.snake.x - this.scale, this.snake.y);
+        this.updateSnake(
+          this.snake.body[headpos].x - this.scale,
+          this.snake.body[headpos].y
+        );
       }
     },
     draw() {
-      this.vueCanvas.tra;
-      this.vueCanvas.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      requestAnimationFrame(this.draw);
+
+      this.now = Date.now();
+      this.elapsed = this.now - this.then;
       switch (this.gameState) {
         case "RUNNING":
-          this.move(this.dir);
-          this.eat();
-          this.drawfood();
           this.death();
+          if (this.elapsed > 200) {
+            this.vueCanvas.clearRect(
+              0,
+              0,
+              this.canvas.width,
+              this.canvas.height
+            );
+            this.then = this.now - (this.elapsed % this.fpsInterval);
+            this.moveSnake(this.dir);
+            this.eat();
+            this.drawfood();
+            this.frameRate += 1;
+          }
           break;
         case "SETUP":
           this.vueCanvas.fillStyle = this.fontColor;
@@ -150,8 +153,6 @@ export default {
           this.running = false;
           this.controlMessage = "Play";
           this.dir = "right";
-          this.snake.x = 0;
-          this.snake.y = 0;
           break;
 
         default:
@@ -171,77 +172,79 @@ export default {
       }
     },
     eat() {
-      if (this.snake.x === this.food.x && this.snake.y === this.food.y) {
+      if (
+        this.snake.body[this.score].x === this.food.x &&
+        this.snake.body[this.score].y === this.food.y
+      ) {
         this.newFood();
         this.score++;
       }
     },
-    startStop() {
-      this.controlMessage = this.running ? "Play" : "";
-      this.running = !this.running;
-      if (this.running || this.gameState === "RESET") {
-        this.gameState = "RUNNING";
-      }
+    checkFood() {
+      let foodok = true;
+      this.snake.body.forEach((body) => {
+        if (body.x == this.food.x && body.y == this.food.y) {
+          foodok = false;
+        }
+      });
+      return foodok;
     },
     newFood() {
-      let foodok = true;
-      for (let i = 0; i < this.snake.tail.length; i++) {
-        if (
-          this.food.x === this.snake.tail[i].x &&
-          this.food.y === this.snake.tail[i].y
-        ) {
-          this.food.x = this.getRandomGrid(this.width);
-          this.food.y = this.getRandomGrid(this.height);
-          foodok = false;
-          console.log("food landed on snake");
-          break;
-        }
-      }
-      if (foodok) {
-        return;
-      } else {
-        this.newFood();
-      }
-    },
-    death() {
-      // didn't die straight away once left screen, need to investigate and fix
-      if (
-        this.snake.x < 0 ||
-        this.snake.x > this.canvas.width ||
-        this.snake.y < 0 ||
-        this.snake.y > this.canvas.height
-      ) {
-        this.die();
-      }
+      this.food.x = this.getRandomGrid(this.width);
+      this.food.y = this.getRandomGrid(this.height);
 
-      for (let i = 1; i < this.snake.tail.length - 1; i++) {
-        let pos = this.snake.tail[i];
-        let d = Math.sqrt(
-          Math.pow(this.snake.x - pos.x, 2) + Math.pow(this.snake.y - pos.y, 2)
-        );
-        if (d < 1) {
-          this.die();
-          this.gameState = "RESET";
-          console.log(d);
-          console.log("died");
-        }
+      if (this.checkFood()) {
+        return;
       }
+      this.newFood();
     },
     die() {
-      this.snake.tail = [];
-      // this.$emit("gameEnd", this.score);
+      this.vueCanvas.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      // reset game
+      this.gameState = "END";
+      this.$mount();
       this.$refs.scoreBoard.sendScore(this.score);
+      this.snake.body = [{ x: 0, y: 0 }];
+      this.snake.x = 0;
+      this.snake.y = 0;
+      this.dir = "right";
       this.score = 0;
-      this.gameState = "RESET";
-    }
-  }
+      this.controlMessage = "Start";
+    },
+    outsideCanvas() {
+      let head = this.snake.body[this.snake.body.length - 1];
+      if (head.x < 0 || head.x > 200 || head.y < 0 || head.y > 200) {
+        return true;
+      }
+      return false;
+    },
+    collideWithSelf() {
+      let collided = false;
+      for (let index = 0; index < this.snake.body.length - 2; index++) {
+        if (
+          this.snake.body[index].x ===
+            this.snake.body[this.snake.body.length - 1].x &&
+          this.snake.body[index].y ===
+            this.snake.body[this.snake.body.length - 1].y
+        ) {
+          collided = true;
+        }
+      }
+      return collided;
+    },
+    death() {
+      if (this.outsideCanvas() || this.collideWithSelf()) {
+        this.die();
+      }
+    },
+    reset() {
+      console.log("reset");
+      this.gameState = "SETUP";
+    },
+  },
 };
 </script>
 <style lang="scss">
-.snakegame {
-  // background-color: grey;
-}
-
 .border {
   border: 1px;
   border-style: solid;
@@ -252,7 +255,7 @@ export default {
 }
 
 canvas {
-  -webkit-filter: invert(100%);
+  filter: invert(100%);
   mix-blend-mode: difference;
   position: relative;
 }

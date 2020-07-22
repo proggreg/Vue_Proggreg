@@ -1,17 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import ProjectsGrid from '../components/ProjectsGrid.vue';
-
 Vue.use(VueRouter);
 
 const routes = [{
     path: "/",
-    name: "Home",
+    name: "Home"
   },
   {
-    path: "/ProjectsGrid",
+    path: '/ProjectsGrid',
     name: "ProjectsGrid",
-    component: ProjectsGrid
+    component: () =>
+      import(
+        /* webpackChunkName: "projectsgrid" */
+        "../components/ProjectsGrid.vue"
+      ),
   },
   {
     path: "/AboutMe",
@@ -31,6 +33,32 @@ const routes = [{
         "../components/Contact.vue"
       ),
   },
+  {
+    path: "/Snake",
+    name: "Snake",
+    component: () =>
+      import(
+        /* webpackChunkName: "snake" */
+        "../Projects/Snake/SnakeGame.vue"
+      ),
+  },
+  {
+    path: "/TwitterBot",
+    name: "TwitterBot",
+    component: () =>
+      import(
+        /* webpackChunkName: "twitterbot" */
+        "../Projects/TwitterBot/TwitterBot.vue"
+      ),
+  }, {
+    path: "/Synth",
+    name: "Synth",
+    component: () =>
+      import(
+        /* webpackChunkName: "synth" */
+        "../Projects/Synth/Synth.vue"
+      ),
+  }
 ];
 
 const router = new VueRouter({
