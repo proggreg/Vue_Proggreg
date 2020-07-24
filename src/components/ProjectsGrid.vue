@@ -1,6 +1,6 @@
 //TODO Add transition effects for boxes, short transition time as to be responsive and not annoying
 <template>
-  <v-row>
+  <v-row class="projectsGrid">
     <v-col cols="12">
       <v-row align="center" justify="center">
         <v-card
@@ -10,17 +10,15 @@
           :key="project.title"
           outlined
           ripple
-          min-width="20%"
-          min-height="150px"
           :to="project.href"
-        >{{project.title}}</v-card>
+        >
+          <v-card-text class="projectTitle" v-text="project.title"></v-card-text>
+        </v-card>
       </v-row>
     </v-col>
   </v-row>
 </template>
 <script>
-// eslint-disable-next-line vue/no-use-v-if-with-v-for
-
 export default {
   name: "ProjectsGrid",
   components: {},
@@ -44,5 +42,13 @@ export default {
   },
 };
 </script>
-<style >
+<style lang="scss">
+.projectsGrid {
+  .card {
+    .projectTitle {
+      color: white;
+      font-size: 1.5vmax;
+    }
+  }
+}
 </style>

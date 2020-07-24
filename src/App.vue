@@ -6,6 +6,7 @@
       <v-container style="display:flex; height: 100%;" fluid>
         <v-layout justify-center align-center>
           <v-card height="90%" id="contentContainer" width="80%" min-height="500px" class="pa-12">
+            <v-btn class="primary" v-if="tabCheck() == false" to="/ProjectsGrid">Back</v-btn>
             <!-- content -->
 
             <router-view />
@@ -25,6 +26,21 @@ export default {
   },
   mounted() {
     this.$router.push("/ProjectsGrid");
+
+    console.log(this.$route.name);
+  },
+  methods: {
+    // TODO could be improved to make check dynamic, possibly changed if routes are made nested
+    tabCheck() {
+      if (
+        this.$route.name == "ProjectsGrid" ||
+        this.$route.name == "AboutMe" ||
+        this.$route.name == "Contact"
+      ) {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>

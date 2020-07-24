@@ -2,7 +2,6 @@
   <div class="snakegame" style="touch-action: none;">
     <v-container style="touch-action: none;" fluid>
       <v-row>
-        <v-btn class="primary" to="/ProjectsGrid">Back</v-btn>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
