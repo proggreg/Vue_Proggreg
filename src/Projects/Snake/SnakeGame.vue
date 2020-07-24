@@ -1,10 +1,10 @@
 <template>
-  <div class="snakegame">
-    <v-container fluid>
+  <div class="snakegame" style="touch-action: none;">
+    <v-container style="touch-action: none;" fluid>
       <v-row>
+        <v-btn class="primary" to="/ProjectsGrid">Back</v-btn>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <h3 class="text-center">Current Score: {{score}}</h3>
-          <v-card-text v-model="dir" v-text="dir" class="text-center"></v-card-text>
+          <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
             <canvas width="200" height="200" class="absolute-center" id="canvas" />
           </v-layout>
@@ -246,14 +246,11 @@ export default {
       }
     },
     reset() {
-      console.log("reset");
       this.gameState = "SETUP";
     },
     getTouches(evt) {
       console.log("hello");
-      return (
-        evt.touches || evt.originalEvent.touches // browser API
-      ); // jQuery
+      return evt.touches || evt.originalEvent.touches;
     },
     handleTouchStart(evt) {
       const firstTouch = this.getTouches(evt)[0];
@@ -298,7 +295,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.snakegame {
+#canvas {
   touch-action: none;
 }
 .border {

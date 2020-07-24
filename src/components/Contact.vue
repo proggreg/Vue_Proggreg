@@ -1,29 +1,45 @@
 <template>
-  <v-form @submit.prevent>
-    <v-text-field v-model="name" placeholder="Name"></v-text-field>
-    <v-text-field v-model="email" placeholder="Email"></v-text-field>
-    <v-textarea class="text-center" v-model="message"></v-textarea>
+  <v-form id="contactForm" @submit.prevent>
+    <v-text-field v-model="name" placeholder="Your Name"></v-text-field>
+    <v-text-field v-model="email" placeholder="Your Email"></v-text-field>
+    <v-textarea placeholder="Your Message" dense auto-grow class="text-center" v-model="message"></v-textarea>
     <v-btn
       class="mr-4 primary"
-      @click="submit"
+      @click="validateForm()"
       style="display: flex; margin: auto auto 0 auto !important; "
     >Send</v-btn>
-
-    <p>{{name}} {{email}} {{message}}</p>
   </v-form>
+  <!-- TODO Add validation to form -->
+  <!-- TODO Implement email feature -->
 </template>
 
 <script>
 export default {
   name: "ContactForm",
+  methods: {
+    validateForm() {
+      console.log("validate");
+    },
+  },
   data() {
     return {
       name: "",
       email: "",
-      message: ""
+      message: "",
     };
-  }
+  },
 };
 </script>
 
-// Add cache so form information is stored in local storage, this should prevent information being lost when tab switching
+// TODO Add cache so form information is stored in local storage, this should prevent information being lost when tab switching
+
+<style lang="scss">
+#contactForm {
+  /* background-color: yellow; */
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+  width: 60%;
+  margin: 0 auto;
+}
+</style>

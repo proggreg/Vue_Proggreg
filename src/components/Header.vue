@@ -1,23 +1,30 @@
 <template>
-  <v-card class="Header secondary">
-    <v-toolbar class="myClass" extended elevation="20">
-      <v-toolbar-title class="headerTitle font-weight-bold font">Prog:greg</v-toolbar-title>
+  <v-card class="Header">
+    <v-toolbar extended elevation="20">
+      <!-- TODO align title in center -->
+      <v-layout>
+        <v-toolbar-title
+          style="margin: 0 auto; font-size: 2em; position: relative"
+          class="font-weight-bold absolute-center"
+        >Prog:greg</v-toolbar-title>
 
+        <!-- TODO Make Button responsive -->
+
+        <!-- Dark Mode Buttons -->
+
+        <v-btn
+          class="primary darkModeBtn"
+          style
+          v-if="$vuetify.theme.dark"
+          @click="godark()"
+        >Light Mode</v-btn>
+        <v-btn class="primary darkModeBtn" @click="godark()" v-else>Dark Mode</v-btn>
+      </v-layout>
+
+      <!-- Tabs -->
       <template v-slot:extension>
         <Tabs />
       </template>
-      <v-btn
-        class="primary"
-        style="position: absolute; right: 2%; font-size: 0.5em; padding: 5px"
-        @click="godark()"
-        v-if="$vuetify.theme.dark"
-      >Light Mode</v-btn>
-      <v-btn
-        class="primary"
-        style="position: absolute; right: 2%;font-size: 0.5em; padding: 5px"
-        @click="godark()"
-        v-else
-      >Dark Mode</v-btn>
     </v-toolbar>
   </v-card>
 </template>
@@ -44,16 +51,20 @@ export default {
   justify-content: center;
   position: relative;
 
-  .myClass {
-    .v-toolbar__content {
-      justify-content: center !important;
-    }
-  }
-
   .headerTitle {
     font-size: 2.5rem;
     cursor: default;
     user-select: none;
+  }
+
+  .darkModeBtn {
+    position: absolute;
+    right: 2%;
+    top: 30%;
+
+    @media screen and (max-width: 600px) {
+      padding: 1% !important;
+    }
   }
 }
 </style>

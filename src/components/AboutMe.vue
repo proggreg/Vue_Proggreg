@@ -8,6 +8,8 @@
       <br />
     </p>
     <h1 class="text-center">Techical Skills</h1>
+
+    <!-- TODO Text doesn't fit on sheet on mobile -->
     <ul class="justify-center" style="width: max-content; margin: 0 auto; list-style: none;">
       <li>
         <b>Languages:</b> Java, Javascript, Python
@@ -34,7 +36,7 @@
 <style lang="scss">
 p {
   text-align: center;
-  font-size: 1vw;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;

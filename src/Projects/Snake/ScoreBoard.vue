@@ -40,9 +40,17 @@ export default {
   },
   methods: {
     getScores() {
-      axios.get("http://localhost:4000/api/users").then((res) => {
-        this.scores = res.data;
-      });
+      axios
+        .get("http://localhost:4000/api/users")
+        .then((res) => {
+          this.scores = res.data;
+        })
+        .catch((err) => {
+          // if (err.) {
+
+          // }
+          console.log(err);
+        });
 
       this.showScoreBoard = true;
     },

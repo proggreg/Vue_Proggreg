@@ -3,13 +3,15 @@
   <!-- /* eslint-disable vue/no-use-v-if-with-v-for */ -->
   <div id="synthContainer">
     <h1 class="text-center" style="width: max-content; margin: 0 auto">Synth</h1>
-    <div @click.capture="play"  id="whiteKey" :key="i.note" v-for="i in notes"></div>
+    <div @click.capture="play" id="whiteKey" :key="i.note" v-for="i in notes"></div>
     <div :style="i.style" @click="play" id="blackKey" :key="i" v-for="i in sharpflats"></div>
     <v-btn style="margin: 0 auto" v-on:click.native="play">Click</v-btn>
   </div>
 </template>
 <script>
 // import { Synth } from "tone";
+
+// TODO Finish Synth
 
 export default {
   name: "Synth",
@@ -21,7 +23,7 @@ export default {
       //   ?range 50 - 150 = - 150 then .abs
       console.log(vol);
       //   synth.triggerAttackRelease(event.note + "4", "8n");
-    }
+    },
   },
   data() {
     return {
@@ -32,7 +34,7 @@ export default {
         { note: "F" },
         { note: "G" },
         { note: "A" },
-        { note: "B" }
+        { note: "B" },
       ],
       sharpflats: [
         { note: "C#", style: "" },
@@ -40,10 +42,10 @@ export default {
         { note: "", style: "height: 0; border: none" },
         { note: "F#", style: "" },
         { note: "G#", style: "" },
-        { note: "A#", style: "" }
-      ]
+        { note: "A#", style: "" },
+      ],
     };
-  }
+  },
 };
 </script>
 <style lang="scss">

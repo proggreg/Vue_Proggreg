@@ -1,14 +1,17 @@
 <template>
-  <v-tabs v-model="tabs.title" class="projects" fixed-tabs>
-    <v-tab :to="tab.component" :key="tab.title" v-for="tab in tabs">
+  <!-- TODO Make Tabs responsive (contact tab is hidden when on iphone x/xs) -->
+  <!-- TODO Project Tab becomes unhighlight/active when on a project page (snake) -->
+  <v-tabs v-model="tabs.title" class="tabs" fixed-tabs>
+    <v-tab class="tab" :to="tab.component" :key="tab.title" v-for="tab in tabs">
       <v-icon>{{tab.icon}}</v-icon>
-      {{tab.title}}
+      <v-card-text v-if="isMobile == false" style="width:max-content">{{tab.title}}</v-card-text>
     </v-tab>
   </v-tabs>
 </template>
 <style scoped>
 </style>
 <script>
+/* eslint-disable */
 export default {
   name: "Tabs",
   data() {
@@ -17,22 +20,30 @@ export default {
         {
           title: "Projects",
           icon: "mdi-code-braces",
-          component: "/ProjectsGrid"
+          component: "/ProjectsGrid",
         },
         {
           title: "AboutMe",
           icon: "mdi-account-circle",
-          component: "/AboutMe"
+          component: "/AboutMe",
         },
         {
           title: "Contact",
           icon: "mdi-at",
-          component: "/Contact"
-        }
-      ]
+          component: "/Contact",
+        },
+      ],
+      isMobile: mobilecheck(),
     };
-  }
+  },
 };
 </script>
-<style >
+<style lang="scss">
+.tabs {
+  .tab {
+    @media screen and (max-width: 600px) {
+      width: 10px !important;
+    }
+  }
+}
 </style>

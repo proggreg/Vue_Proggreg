@@ -12,9 +12,10 @@ export default new Vuetify({
   theme: {
     default: "light",
 
+    // TODO fix dark mode when mobile is set to dark mode
     themes: {
       light: {
-        primary: colors.pink,
+        primary: colors.indigo,
         secondary: colors.blue,
         accent: colors.green,
         error: colors.red.accent3,

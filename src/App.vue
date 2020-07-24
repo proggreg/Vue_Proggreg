@@ -2,11 +2,12 @@
 <template >
   <v-app class="primary" id="app">
     <Header />
-    <v-main>
-      <v-container fluid>
+    <v-main class="primary" style="display: flex; justify-content: center; align-content: center">
+      <v-container style="display:flex; height: 100%;" fluid>
         <v-layout justify-center align-center>
-          <v-card width="80%" min-height="500px" class="pa-12">
+          <v-card height="90%" id="contentContainer" width="80%" min-height="500px" class="pa-12">
             <!-- content -->
+
             <router-view />
           </v-card>
         </v-layout>
@@ -38,5 +39,11 @@ body,
 #app {
   font-family: "Exo 2", sans-serif;
   height: 100% !important;
+}
+
+#contentContainer {
+  @media screen and (max-width: 600px) {
+    padding: 5% !important;
+  }
 }
 </style>

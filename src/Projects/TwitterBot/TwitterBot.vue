@@ -4,8 +4,9 @@
   </div>
 </template>
 <script>
+// TODO Finish Twitter Bot
 export default {
-  name: "TwitterBot"
+  name: "TwitterBot",
 };
 </script>
 <style scoped>

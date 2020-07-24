@@ -1,4 +1,4 @@
-//TODO Add transition effects for boxes
+//TODO Add transition effects for boxes, short transition time as to be responsive and not annoying
 <template>
   <v-row>
     <v-col cols="12">
@@ -20,6 +20,7 @@
 </template>
 <script>
 // eslint-disable-next-line vue/no-use-v-if-with-v-for
+
 export default {
   name: "ProjectsGrid",
   components: {},
@@ -29,17 +30,14 @@ export default {
         {
           title: "Snake",
           href: "/Snake",
-          complete: true,
         },
         {
           title: "TwitterBot",
           href: "/TwitterBot",
-          complete: false,
         },
         {
           title: "Synth",
           href: "/Synth",
-          complete: false,
         },
       ],
     };
