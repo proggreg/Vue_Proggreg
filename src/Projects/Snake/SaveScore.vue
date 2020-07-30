@@ -9,7 +9,6 @@
       placeholder="Username"
     ></v-text-field>
     <v-card-text class="text-center font-weight-bold" v-model="score">Your Score: {{score}}</v-card-text>
-    <!-- Name should be required -->
     <v-btn
       @click="checkName"
       class="mr-4 primary"
@@ -19,8 +18,6 @@
 </template>
 <script>
 const axios = require("axios");
-
-const API_URL = "http://localhost:4000/api/users";
 
 export default {
   name: "SaveScore",
@@ -33,11 +30,16 @@ export default {
   methods: {
     sendData() {
       var data = { username: this.username, score: this.score };
-      axios.post(API_URL, data).then((res) => {
-        console.log(res);
-      });
+      const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
 
-      // would be better to use a promise?
+      axios
+        .post(url, data)
+        .then((res) => {
+          console.warn(res);
+        })
+        .catch((err) => console.log(err));
+
+      // TODO would be better to use a promise?
       setTimeout(() => {
         this.$emit("getNewScores", null);
       }, 100);

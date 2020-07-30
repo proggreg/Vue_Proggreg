@@ -2,6 +2,16 @@
   <div class="snakegame" style="touch-action: none;">
     <v-container style="touch-action: none;" fluid>
       <v-row>
+        <div id="topScores" style=" margin-left: auto">
+          <h3 class="text=center">Top Score</h3>
+          <v-card-text
+            class="text-center"
+            v-model="topScore"
+          >{{topScore.username}} {{topScore.score}}</v-card-text>
+        </div>
+      </v-row>
+      <v-row>
+        <!-- <v-btn @click="showScoreBoard()" class="primary center">View Scores</v-btn> -->
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
@@ -16,7 +26,12 @@
           ></v-btn>
         </v-col>
         <v-col style="flex-basis: unset">
-          <ScoreBoard v-on:LoadGame="this.reset" v-if="gameState === 'END'" ref="scoreBoard" />
+          <ScoreBoard
+            @updateTopScore="updateTopScore"
+            v-on:LoadGame="this.reset"
+            v-if="gameState === 'END' || showScores === true"
+            ref="scoreBoard"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -24,12 +39,20 @@
 </template>
 <script>
 import ScoreBoard from "./ScoreBoard";
+import Axios from "axios";
 export default {
   name: "Snake",
   components: {
     ScoreBoard,
   },
-  mounted() {},
+  mounted() {
+    Axios.get("http://localhost:4000/api/users")
+      .then((res) => {
+        this.topScore = res.data[0];
+        console.log(res.data[0]);
+      })
+      .catch((err) => console.log(err));
+  },
   data() {
     return {
       fpsInterval: 200, // 5 Frames Per Second
@@ -55,9 +78,22 @@ export default {
       frameRate: 0,
       xDown: null,
       yDown: null,
+      showScores: false,
+      topScore: 0,
     };
   },
   methods: {
+    updateTopScore(newTopSore) {
+      this.topScore = newTopSore;
+    },
+    showScoreBoard() {
+      this.showScores = true;
+      this.$mount();
+      console.log(this.$refs.scoreBoard);
+      this.$refs.scoreBoard.showScoreBoard = true;
+      this.$refs.scoreBoard.getScores();
+      this.gameState = "PAUSED";
+    },
     start() {
       // add event listener to listen for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
@@ -168,14 +204,27 @@ export default {
     },
     handleGlobalKeyDown(e) {
       var kc = e.keyCode;
-      if (kc === 38) {
-        this.dir = "up";
-      } else if (kc === 39) {
-        this.dir = "right";
-      } else if (kc === 40) {
-        this.dir = "down";
-      } else if (kc === 37) {
-        this.dir = "left";
+      // prevent snake from going in oppsite direction and eating self
+      if (this.snake.body.length > 1) {
+        if (kc === 38 && this.dir != "down") {
+          this.dir = "up";
+        } else if (kc === 39 && this.dir != "left") {
+          this.dir = "right";
+        } else if (kc === 40 && this.dir != "up") {
+          this.dir = "down";
+        } else if (kc === 37 && this.dir != "right") {
+          this.dir = "left";
+        }
+      } else {
+        if (kc === 38) {
+          this.dir = "up";
+        } else if (kc === 39) {
+          this.dir = "right";
+        } else if (kc === 40) {
+          this.dir = "down";
+        } else if (kc === 37) {
+          this.dir = "left";
+        }
       }
     },
     eat() {
@@ -257,6 +306,7 @@ export default {
       this.yDown = firstTouch.clientY;
     },
     handleTouchMove(evt) {
+      let length = this.snake.body.length;
       if (!this.xDown || !this.yDown) {
         return;
       }
@@ -272,18 +322,35 @@ export default {
         if (xDiff > 0) {
           /* left swipe */
 
-          this.dir = "left";
+          // TODO doesn't prevent snake from going in opposite direction
+          if (length > 1 && this.dir != "right") {
+            this.dir = "left";
+          } else {
+            this.dir = "left";
+          }
         } else {
           /* right swipe */
-          this.dir = "right";
+          if (length > 1 && this.dir != "left") {
+            this.dir = "right";
+          } else {
+            this.dir = "right";
+          }
         }
       } else {
         if (yDiff > 0) {
           /* up swipe */
-          this.dir = "up";
+          if (length > 1 && this.dir != "down") {
+            this.dir = "up";
+          } else {
+            this.dir = "up";
+          }
         } else {
           /* down swipe */
-          this.dir = "down";
+          if (length > 1 && this.dir != "up") {
+            this.dir = "down";
+          } else {
+            this.dir = "down";
+          }
         }
       }
       /* reset values */

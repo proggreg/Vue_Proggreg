@@ -10,14 +10,15 @@
       <h1 class="text-center">Scores</h1>
       <v-row v-if="showScoreBoard" style="width: 50%; margin: 0 auto">
         <v-col>
-          <!-- would be nice to have dashes to link name to score, layout could also be improved -->
+          <!-- TODO would be nice to have dashes to link name to score, layout could also be improved -->
+          <!-- TODO Display scores with crousel  -->
           <ol>
-            <li v-for="score in sortedArray" :key="score.id">{{score.username}}</li>
+            <li v-for="score in scores" :key="score.id">{{score.username}}</li>
           </ol>
         </v-col>
         <v-col style="width: max-content; flex-grow: unset;">
           <ol style="list-style-type: none; width: max-content;">
-            <li v-for="score in sortedArray" :key="score.id">{{score.score}}</li>
+            <li v-for="score in scores" :key="score.id">{{score.score}}</li>
           </ol>
         </v-col>
       </v-row>
@@ -32,7 +33,7 @@
 import SaveScore from "./SaveScore";
 
 import axios from "axios";
-
+const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
 export default {
   name: "ScoreBoard",
   components: {
@@ -41,14 +42,12 @@ export default {
   methods: {
     getScores() {
       axios
-        .get("http://localhost:4000/api/users")
+        .get(url)
         .then((res) => {
           this.scores = res.data;
+          this.$emit("updateTopScore", res.data[0]);
         })
         .catch((err) => {
-          // if (err.) {
-
-          // }
           console.log(err);
         });
 
@@ -64,18 +63,6 @@ export default {
   data() {
     return { scores: [], showScoreBoard: false };
   },
-
-  computed: {
-    sortedArray: function () {
-      function compare(a, b) {
-        if (a.score > b.score) return -1;
-        if (a.score < b.score) return 1;
-        return 0;
-      }
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.scores.sort(compare);
-    },
-  },
 };
 </script>
 <style lang="scss">
@@ -83,10 +70,7 @@ export default {
   width: 100%;
   height: 100%;
   display: inline-block;
-
-  // text-align: center;
   color: currentColor;
-
   li {
     font-size: 0.8vw;
   }

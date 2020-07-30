@@ -1,8 +1,15 @@
 <template>
   <v-form id="contactForm" @submit.prevent>
-    <v-text-field v-model="name" placeholder="Your Name"></v-text-field>
+    <v-text-field class="yourname" v-model="name" placeholder="Your Name"></v-text-field>
     <v-text-field v-model="email" placeholder="Your Email"></v-text-field>
-    <v-textarea placeholder="Your Message" dense auto-grow class="text-center" v-model="message"></v-textarea>
+    <v-textarea
+      color="primary"
+      placeholder="Your Message"
+      dense
+      auto-grow
+      class="myClass text-center"
+      v-model="message"
+    ></v-textarea>
     <v-btn
       class="mr-4 primary"
       @click="validateForm()"
@@ -39,6 +46,17 @@ export default {
   @media screen and (max-width: 600px) {
     width: 100%;
   }
+
+  input::placeholder {
+    color: black !important;
+    opacity: 0.5;
+  }
+
+  textarea::placeholder {
+    color: black !important;
+    opacity: 0.5;
+  }
+
   width: 60%;
   margin: 0 auto;
 }
