@@ -49,7 +49,8 @@ export default {
     ScoreBoard,
   },
   mounted() {
-    Axios.get("http://localhost:4000/api/users")
+    const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
+    Axios.get(url)
       .then((res) => {
         this.topScore = res.data[0];
         console.log(res.data[0]);
