@@ -32,6 +32,8 @@ export default {
       var data = { username: this.username, score: this.score };
       const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
 
+      console.log(url);
+
       axios
         .post(url, data)
         .then((res) => {
