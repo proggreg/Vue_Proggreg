@@ -1,5 +1,7 @@
 # proggreg
 
+<a href="https://proggreg.github.io/Vue_Proggreg/>View</a>
+
 ## Project setup
 ```
 npm install
