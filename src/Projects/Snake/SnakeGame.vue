@@ -4,10 +4,13 @@
       <v-row>
         <div id="topScores" style=" margin-left: auto">
           <h3 class="text=center">Top Score</h3>
-          <v-card-text
-            class="text-center"
-            v-model="topScore"
-          >{{topScore.username}} {{topScore.score}}</v-card-text>
+          <v-card-text class v-model="topScore">
+            <b>Name:</b>
+            {{topScore.username}}
+            <br />
+            <b>Score:</b>
+            {{topScore.score}}
+          </v-card-text>
         </div>
       </v-row>
       <v-row>
