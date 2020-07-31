@@ -21,11 +21,38 @@
 </template>
 
 <script>
+const axios = require("axios");
+const url = "http://" + process.env.VUE_APP_API_URL + "/email/send";
+
 export default {
   name: "ContactForm",
   methods: {
     validateForm() {
       console.log("validate");
+      console.log(process.env.VUE_APP_API_URL);
+      if (!this.name) {
+        console.log("name is required");
+      } else if (!this.email) {
+        console.log("email is required");
+      } else if (!this.message) {
+        console.log("message is required");
+      } else if (!this.subject) {
+        console.log("subject is required");
+      } else {
+        this.sendMail();
+      }
+    },
+    sendMail() {
+      let emailOptions = {
+        subject: this.subject,
+        msg: this.message,
+        from: this.name,
+        email: this.email,
+      };
+      axios
+        .post(url, emailOptions)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     },
   },
   data() {
