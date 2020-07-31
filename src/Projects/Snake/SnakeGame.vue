@@ -2,19 +2,6 @@
   <div class="snakegame" style="touch-action: none;">
     <v-container style="touch-action: none;" fluid>
       <v-row>
-        <div id="topScores" style=" margin-left: auto">
-          <h3 class="text=center">Top Score</h3>
-          <v-card-text class v-model="topScore">
-            <b>Name:</b>
-            {{topScore.username}}
-            <br />
-            <b>Score:</b>
-            {{topScore.score}}
-          </v-card-text>
-        </div>
-      </v-row>
-      <v-row>
-        <!-- <v-btn @click="showScoreBoard()" class="primary center">View Scores</v-btn> -->
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
@@ -28,6 +15,19 @@
             style="display: flex; margin: 20px auto 0 auto !important; "
           ></v-btn>
         </v-col>
+        <div
+          id="topScores"
+          style=" margin-left: auto; width: max-content; z-index: 1; position: absolute; right: 5%; top: 5%;"
+        >
+          <h3 class="text=center">Top Score</h3>
+          <v-card-text class v-model="topScore">
+            <b>Name:</b>
+            {{topScore.username}}
+            <br />
+            <b>Score:</b>
+            {{topScore.score}}
+          </v-card-text>
+        </div>
         <v-col style="flex-basis: unset">
           <ScoreBoard
             @updateTopScore="updateTopScore"
@@ -49,7 +49,7 @@ export default {
     ScoreBoard,
   },
   mounted() {
-    const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
+    const url = "https://" + process.env.VUE_APP_API_URL + "/api/users";
     Axios.get(url)
       .then((res) => {
         this.topScore = res.data[0];

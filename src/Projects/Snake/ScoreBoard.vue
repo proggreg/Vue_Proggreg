@@ -1,17 +1,12 @@
 <template>
   <div id="scoreboard">
     <v-layout column justify-center>
-      <v-btn
-        @click="playAgain"
-        class="mr-4 primary"
-        style="display: flex; margin: auto auto 0 auto !important; "
-        v-if="showScoreBoard"
-      >Play again</v-btn>
       <h1 class="text-center">Scores</h1>
       <v-row v-if="showScoreBoard" style="width: 50%; margin: 0 auto">
         <v-col>
           <!-- TODO would be nice to have dashes to link name to score, layout could also be improved -->
           <!-- TODO Display scores with crousel  -->
+          <!-- TODO Add Headers -->
           <ol>
             <li v-for="score in scores" :key="score.id">{{score.username}}</li>
           </ol>
@@ -20,6 +15,12 @@
           <ol style="list-style-type: none; width: max-content;">
             <li v-for="score in scores" :key="score.id">{{score.score}}</li>
           </ol>
+          <v-btn
+            @click="playAgain"
+            class="mr-4 primary"
+            style="display: flex; margin: auto auto 0 auto !important; "
+            v-if="showScoreBoard"
+          >Play again</v-btn>
         </v-col>
       </v-row>
 
@@ -33,7 +34,7 @@
 import SaveScore from "./SaveScore";
 
 import axios from "axios";
-const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
+const url = "https://" + process.env.VUE_APP_API_URL + "/api/users";
 export default {
   name: "ScoreBoard",
   components: {
@@ -72,7 +73,7 @@ export default {
   display: inline-block;
   color: currentColor;
   li {
-    font-size: 0.8vw;
+    font-size: 16px;
   }
   .title {
     filter: invert(100%);

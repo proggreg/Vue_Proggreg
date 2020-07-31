@@ -30,32 +30,32 @@ export default {
   methods: {
     sendData() {
       var data = { username: this.username, score: this.score };
-      const url = "http://" + process.env.VUE_APP_API_URL + "/api/users";
+      const url = "https://" + process.env.VUE_APP_API_URL + "/api/users";
 
       console.log(url);
 
       axios
         .post(url, data)
-        .then((res) => {
-          console.warn(res);
+        .then(() => {
+          this.$emit("getNewScores");
         })
         .catch((err) => console.log(err));
 
       // TODO would be better to use a promise?
-      setTimeout(() => {
-        this.$emit("getNewScores", null);
-      }, 100);
     },
     setScore(score) {
       this.showButton = true;
       this.score = score;
     },
     checkName() {
-      if (this.username) {
+      if (!this.username) {
+        this.error = "Name is required.";
+      } else if (this.username.length > 30) {
+        this.error = "Name must be less than 30 characters, sorry.";
+      } else {
         this.error = "";
         return this.sendData();
       }
-      this.error = "Name is required.";
     },
   },
 };
