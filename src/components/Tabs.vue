@@ -4,7 +4,11 @@
   <v-tabs v-model="tabs.title" class="tabs" fixed-tabs>
     <v-tab class="tab" :to="tab.component" :key="tab.title" v-for="tab in tabs">
       <v-icon>{{tab.icon}}</v-icon>
-      <v-card-text v-if="isMobile == false" style="width:max-content">{{tab.title}}</v-card-text>
+      <v-card-text
+        class="text--accent-3"
+        v-if="isMobile == false"
+        style="width:max-content"
+      >{{tab.title}}</v-card-text>
     </v-tab>
   </v-tabs>
 </template>

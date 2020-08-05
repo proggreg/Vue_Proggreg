@@ -15,16 +15,20 @@ export default new Vuetify({
     // TODO fix dark mode when mobile is set to dark mode
     themes: {
       light: {
-        primary: colors.indigo,
-        secondary: colors.blue,
-        accent: colors.green,
+        primary: colors.lightGreen,
+        secondary: colors.green,
+        accent: colors.deepPurple,
         error: colors.red.accent3,
+
       },
       dark: {
         primary: colors.orange,
         secondary: colors.blue,
         accent: colors.green,
         error: colors.red.accent3,
+      },
+      options: {
+        customProperties: true,
       },
     },
   },

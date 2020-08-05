@@ -2,6 +2,7 @@
   <div class="snakegame" style="touch-action: none;">
     <v-container style="touch-action: none;" fluid>
       <v-row>
+        <v-col></v-col>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
           <v-layout class="border">
@@ -15,26 +16,29 @@
             style="display: flex; margin: 20px auto 0 auto !important; "
           ></v-btn>
         </v-col>
-        <div
-          id="topScores"
-          style=" margin-left: auto; width: max-content; z-index: 1; position: absolute; right: 5%; top: 5%;"
-        >
-          <h3 class="text=center">Top Score</h3>
-          <v-card-text class v-model="topScore">
-            <b>Name:</b>
-            {{topScore.username}}
-            <br />
-            <b>Score:</b>
-            {{topScore.score}}
-          </v-card-text>
-        </div>
-        <v-col style="flex-basis: unset">
-          <ScoreBoard
-            @updateTopScore="updateTopScore"
-            v-on:LoadGame="this.reset"
-            v-if="gameState === 'END' || showScores === true"
-            ref="scoreBoard"
-          />
+
+        <v-col v-if="gameState === 'END' || showScores === true">
+          <ScoreBoard @updateTopScore="updateTopScore" v-on:LoadGame="this.reset" ref="scoreBoard" />
+        </v-col>
+
+        <v-col>
+          <v-layout justify-center>
+            <div id="topScores">
+              <h2 style="margin-bottom: 20px" class="text-center">Top 5 Scores</h2>
+              <ul style="list-style:none">
+                <li style="display:flex" v-for="(score,i) in topFiveScores" :key="score._id">
+                  <div style="margin-left: -24px; width: 10px">{{i+1}}</div>
+                  <p style="padding-left: 10px; margin: 0">
+                    <b>Name:</b>
+                    {{score.username}}
+                    <br />
+                    <b>Score:</b>
+                    {{score.score}}
+                  </p>
+                </li>
+              </ul>
+            </div>
+          </v-layout>
         </v-col>
       </v-row>
     </v-container>
@@ -49,11 +53,13 @@ export default {
     ScoreBoard,
   },
   mounted() {
-    const url = "https://" + process.env.VUE_APP_API_URL + "/api/users";
+    const url = process.env.VUE_APP_API_URL + "/api/users";
+
+    // window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
     Axios.get(url)
       .then((res) => {
-        this.topScore = res.data[0];
-        console.log(res.data[0]);
+        this.topFiveScores = res.data.slice(0, 5);
+        console.log(this.topFiveScores);
       })
       .catch((err) => console.log(err));
   },
@@ -70,10 +76,12 @@ export default {
       scale: 20,
       snake: {
         body: [{ x: 0, y: 0 }],
+        color: "rgb(61, 171, 0)",
       },
       food: {
         x: 100,
         y: 100,
+        color: "rgb(178, 0, 0)",
       },
       dir: "right",
       score: 0,
@@ -83,10 +91,20 @@ export default {
       xDown: null,
       yDown: null,
       showScores: false,
-      topScore: 0,
+      topFiveScores: [],
     };
   },
   methods: {
+    disableScroll() {
+      // TODO impletment this
+      // Get the current page scroll position
+      // let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      // (scrollLeft = window.pageXOffset || document.documentElement.scrollLeft),
+      //   // if any scroll is attempted, set this to the previous value
+      //   (window.onscroll = function () {
+      //     window.scrollTo(scrollLeft, scrollTop);
+      //   });
+    },
     updateTopScore(newTopSore) {
       this.topScore = newTopSore;
     },
@@ -116,6 +134,15 @@ export default {
       this.running = !this.running;
       this.gameState = "RUNNING";
       requestAnimationFrame(this.draw);
+
+      // this.$emit("gameStarted");
+      // this.$parent["$el"].$emit("myevent", { data: 123 });
+      let vm = this.$parent;
+
+      while (vm) {
+        vm.$emit("gameStarted");
+        vm = vm.$parent;
+      }
     },
     getRandomGrid(max) {
       return (
@@ -124,7 +151,7 @@ export default {
     },
     drawfood: function () {
       this.vueCanvas.beginPath();
-      this.vueCanvas.fillStyle = "red";
+      this.vueCanvas.fillStyle = this.food.color;
       this.vueCanvas.rect(this.food.x, this.food.y, this.scale, this.scale);
       this.vueCanvas.fill();
     },
@@ -134,8 +161,10 @@ export default {
       }
       this.snake.body[this.score] = { x, y };
 
+      // TODO implement rounded corners
       // draw snake
-      this.vueCanvas.fillStyle = "rgb(0,255,0)";
+      this.vueCanvas.fillStyle = this.snake.color;
+      this.vueCanvas.lineJoin = "round";
       this.snake.body.forEach((body) =>
         this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale)
       );

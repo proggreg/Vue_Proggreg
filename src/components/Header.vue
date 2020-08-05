@@ -1,11 +1,10 @@
 <template>
   <v-card class="Header">
-    <v-toolbar extended elevation="20">
-      <!-- TODO align title in center -->
+    <v-toolbar color="secondary" extended elevation="20">
       <v-layout>
         <v-toolbar-title
-          style="margin: 0 auto; font-size: 2em; position: relative"
-          class="font-weight-bold absolute-center"
+          style="margin: 0 auto; font-size: 2em; position: relative; color: var(--v-primary-base);"
+          class="font-weight-bold absolute-center primary--text"
         >Prog:greg</v-toolbar-title>
 
         <!-- TODO Make Button responsive -->

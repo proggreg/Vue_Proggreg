@@ -1,6 +1,11 @@
 <template>
   <v-form class="saveScoreForm" @submit.prevent>
     <!-- TODO would be better to not have the text field move when error message is shown -->
+    <v-card-text
+      style="font-size:20px"
+      class="text-center font-weight-bold"
+      v-model="score"
+    >Your Score: {{score}}</v-card-text>
     <v-card-text class="text-center red--text font-weight-bold" v-text="this.error"></v-card-text>
     <v-text-field
       style="width: max-content; margin: 0 auto;"
@@ -8,7 +13,7 @@
       v-model="username"
       placeholder="Username"
     ></v-text-field>
-    <v-card-text class="text-center font-weight-bold" v-model="score">Your Score: {{score}}</v-card-text>
+
     <v-btn
       @click="checkName"
       class="mr-4 primary"
@@ -30,9 +35,7 @@ export default {
   methods: {
     sendData() {
       var data = { username: this.username, score: this.score };
-      const url = "https://" + process.env.VUE_APP_API_URL + "/api/users";
-
-      console.log(url);
+      const url = process.env.VUE_APP_API_URL + "/api/users";
 
       axios
         .post(url, data)
@@ -40,8 +43,6 @@ export default {
           this.$emit("getNewScores");
         })
         .catch((err) => console.log(err));
-
-      // TODO would be better to use a promise?
     },
     setScore(score) {
       this.showButton = true;

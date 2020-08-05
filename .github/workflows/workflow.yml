@@ -1,0 +1,12 @@
+name: myWorkFlow
+    on: [push]
+      branches:
+        - master
+jobs:
+  build:
+    name: Hello
+      steps:
+        - name: Hello World
+        run: echo $myenv
+          env:
+             VUE_APP_API_URL: ${{ secrets.myenv}}

@@ -1,7 +1,12 @@
 <template>
   <v-form id="contactForm" @submit.prevent>
+    <v-card-text v-model="nameerror">{{nameerror}}</v-card-text>
     <v-text-field class="yourname" v-model="name" placeholder="Your Name"></v-text-field>
+    <v-card-text v-model="emailerror">{{emailerror}}</v-card-text>
     <v-text-field v-model="email" placeholder="Your Email"></v-text-field>
+    <v-card-text v-model="subjecterror">{{subjecterror}}</v-card-text>
+    <v-text-field v-model="subject" placeholder="Subject"></v-text-field>
+    <v-card-text v-model="messageerror">{{messageerror}}</v-card-text>
     <v-textarea
       color="primary"
       placeholder="Your Message"
@@ -16,8 +21,6 @@
       style="display: flex; margin: auto auto 0 auto !important; "
     >Send</v-btn>
   </v-form>
-  <!-- TODO Add validation to form -->
-  <!-- TODO Implement email feature -->
 </template>
 
 <script>
@@ -28,16 +31,33 @@ export default {
   name: "ContactForm",
   methods: {
     validateForm() {
-      console.log("validate");
-      console.log(process.env.VUE_APP_API_URL);
+      let valid = true;
       if (!this.name) {
-        console.log("name is required");
-      } else if (!this.email) {
-        console.log("email is required");
-      } else if (!this.message) {
-        console.log("message is required");
-      } else if (!this.subject) {
-        console.log("subject is required");
+        this.nameerror = "Name is required";
+        valid = false;
+      } else {
+        this.nameerror = "";
+      }
+      if (!this.email) {
+        this.emailerror = "Email is required";
+        valid = false;
+      } else {
+        this.emailerror = "";
+      }
+      if (!this.subject) {
+        this.subjecterror = "Subject is required";
+        valid = false;
+      } else {
+        this.subjecterror = "";
+      }
+      if (!this.message) {
+        this.messageerror = "Message is required";
+        valid = false;
+      } else {
+        this.messageerror = "";
+      }
+      if (!valid) {
+        return;
       } else {
         this.sendMail();
       }
@@ -51,7 +71,9 @@ export default {
       };
       axios
         .post(url, emailOptions)
-        .then((res) => console.log(res))
+        .then((res) => {
+          console.log(res);
+        })
         .catch((err) => console.log(err));
     },
   },
@@ -59,7 +81,9 @@ export default {
     return {
       name: "",
       email: "",
+      subject: "",
       message: "",
+      nameerror: "",
     };
   },
 };
@@ -75,13 +99,11 @@ export default {
   }
 
   input::placeholder {
-    color: black !important;
-    opacity: 0.5;
+    opacity: 0.8;
   }
 
   textarea::placeholder {
-    color: black !important;
-    opacity: 0.5;
+    opacity: 0.8;
   }
 
   width: 60%;
