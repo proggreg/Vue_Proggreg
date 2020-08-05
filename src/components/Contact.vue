@@ -1,25 +1,20 @@
 <template>
   <v-form id="contactForm" @submit.prevent>
-    <v-card-text v-model="nameerror">{{nameerror}}</v-card-text>
-    <v-text-field class="yourname" v-model="name" placeholder="Your Name"></v-text-field>
-    <v-card-text v-model="emailerror">{{emailerror}}</v-card-text>
-    <v-text-field v-model="email" placeholder="Your Email"></v-text-field>
-    <v-card-text v-model="subjecterror">{{subjecterror}}</v-card-text>
-    <v-text-field v-model="subject" placeholder="Subject"></v-text-field>
-    <v-card-text v-model="messageerror">{{messageerror}}</v-card-text>
-    <v-textarea
-      color="primary"
-      placeholder="Your Message"
-      dense
-      auto-grow
-      class="myClass text-center"
-      v-model="message"
-    ></v-textarea>
-    <v-btn
-      class="mr-4 primary"
-      @click="validateForm()"
-      style="display: flex; margin: auto auto 0 auto !important; "
-    >Send</v-btn>
+    <v-layout column class="text--red" style="color: red">
+      <v-card-text class="primary--text" v-model="nameerror">{{nameerror}}</v-card-text>
+      <v-text-field class="myClass" v-model="name" placeholder="Your Name"></v-text-field>
+      <v-card-text v-model="emailerror">{{emailerror}}</v-card-text>
+      <v-text-field class="primary--text" v-model="email" placeholder="Your Email"></v-text-field>
+      <v-card-text v-model="subjecterror">{{subjecterror}}</v-card-text>
+      <v-text-field class="text-green" v-model="subject" placeholder="Subject"></v-text-field>
+      <v-card-text v-model="messageerror">{{messageerror}}</v-card-text>
+      <v-textarea class="messageBox" placeholder="Your Message" auto-grow v-model="message"></v-textarea>
+      <v-btn
+        class="mr-4 primary secondary--text"
+        @click="validateForm()"
+        style="display: flex; margin: auto auto 0 auto !important; "
+      >Send</v-btn>
+    </v-layout>
   </v-form>
 </template>
 
@@ -29,6 +24,9 @@ const url = "http://" + process.env.VUE_APP_API_URL + "/email/send";
 
 export default {
   name: "ContactForm",
+  mounted() {
+    console.log(this.$vuetify.theme.themes);
+  },
   methods: {
     validateForm() {
       let valid = true;
@@ -93,20 +91,33 @@ export default {
 
 <style lang="scss">
 #contactForm {
-  /* background-color: yellow; */
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1000px) {
     width: 100%;
+  }
+
+  .v-text-field {
+    input {
+      color: var(--v-primary-base);
+    }
+  }
+
+  .messageBox {
+    textarea {
+      color: var(--v-primary-base);
+    }
   }
 
   input::placeholder {
     opacity: 0.8;
+    color: var(--v-primary-base);
   }
 
   textarea::placeholder {
     opacity: 0.8;
+    color: var(--v-primary-base);
   }
 
-  width: 60%;
+  width: 50%;
   margin: 0 auto;
 }
 </style>

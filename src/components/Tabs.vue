@@ -2,8 +2,8 @@
   <!-- TODO Make Tabs responsive (contact tab is hidden when on iphone x/xs) -->
   <!-- TODO Project Tab becomes unhighlight/active when on a project page (snake) -->
   <v-tabs v-model="tabs.title" class="tabs" fixed-tabs>
-    <v-tab class="tab" :to="tab.component" :key="tab.title" v-for="tab in tabs">
-      <v-icon>{{tab.icon}}</v-icon>
+    <v-tab class="tab primary--text" :to="tab.component" :key="tab.title" v-for="tab in tabs">
+      <v-icon class="primary--text">{{tab.icon}}</v-icon>
       <v-card-text
         class="text--accent-3"
         v-if="isMobile == false"

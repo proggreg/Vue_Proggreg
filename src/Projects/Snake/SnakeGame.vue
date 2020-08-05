@@ -4,7 +4,7 @@
       <v-row>
         <v-col></v-col>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <h3 style="margin-bottom: 20px" class="text-center">Current Score: {{score}}</h3>
+          <h3 style="margin-bottom: 20px" class="text-center primary--text">Current Score: {{score}}</h3>
           <v-layout class="border">
             <canvas width="200" height="200" class="absolute-center" id="canvas" />
           </v-layout>
@@ -12,7 +12,7 @@
             v-if="this.controlMessage =='Start'"
             v-text="this.controlMessage"
             @click="start()"
-            class="mr-4 primary"
+            class="mr-4 primary secondary--text"
             style="display: flex; margin: 20px auto 0 auto !important; "
           ></v-btn>
         </v-col>
@@ -23,7 +23,7 @@
 
         <v-col>
           <v-layout justify-center>
-            <div id="topScores">
+            <div v-if="topFiveScores.length != 0" id="topScores">
               <h2 style="margin-bottom: 20px" class="text-center">Top 5 Scores</h2>
               <ul style="list-style:none">
                 <li style="display:flex" v-for="(score,i) in topFiveScores" :key="score._id">
@@ -400,7 +400,7 @@ export default {
 .border {
   border: 1px;
   border-style: solid;
-  border-color: currentColor;
+  border-color: var(--v-primary-base);
   width: fit-content;
   height: 202px;
   margin: 0 auto;

@@ -3,21 +3,20 @@
     <v-toolbar color="secondary" extended elevation="20">
       <v-layout>
         <v-toolbar-title
-          style="margin: 0 auto; font-size: 2em; position: relative; color: var(--v-primary-base);"
+          style="margin: 0 auto; font-size: 2em; position: relative;"
           class="font-weight-bold absolute-center primary--text"
         >Prog:greg</v-toolbar-title>
 
         <!-- TODO Make Button responsive -->
 
         <!-- Dark Mode Buttons -->
-
         <v-btn
-          class="primary darkModeBtn"
+          class="primary secondary--text darkModeBtn"
           style
           v-if="$vuetify.theme.dark"
           @click="godark()"
         >Light Mode</v-btn>
-        <v-btn class="primary darkModeBtn" @click="godark()" v-else>Dark Mode</v-btn>
+        <v-btn class="primary secondary--text darkModeBtn" @click="godark()" v-else>Dark Mode</v-btn>
       </v-layout>
 
       <!-- Tabs -->

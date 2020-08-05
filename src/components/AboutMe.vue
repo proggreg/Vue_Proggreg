@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="primary--text">
     <!-- <h1 class="text-center">?</h1> -->
     <p>
       My name is Greg Field, I am a Software Developer at working at AuraQ in Malvern, UK.
@@ -17,7 +17,7 @@
       <li>
         <b>Database:</b> Postgres
       </li>
-      <li style="display:flex; flex-direction: row">
+      <li style="display:flex; flex-direction: row;">
         <b>Front-end:</b>
         <ol class style="list-style: none; display: flex;">
           <li>Vue Js,</li>

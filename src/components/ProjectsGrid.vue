@@ -12,7 +12,7 @@
           ripple
           :to="project.href"
         >
-          <v-card-text class="projectTitle" v-text="project.title"></v-card-text>
+          <v-card-text class="projectTitle secondary--text" v-text="project.title"></v-card-text>
         </v-card>
       </v-row>
     </v-col>

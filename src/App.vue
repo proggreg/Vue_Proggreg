@@ -5,8 +5,17 @@
     <v-main class="primary" style="display: flex; justify-content: center; align-content: center">
       <v-container style="display:flex; height: 100%;" fluid>
         <v-layout justify-center align-center>
-          <v-card v-on:gameStarted="makeCanvas()" height="90%" id="contentContainer" class="pa-8">
-            <v-btn class="primary" v-if="tabCheck() == false" to="/ProjectsGrid">Back</v-btn>
+          <v-card
+            class="pa-8 secondary"
+            v-on:gameStarted="makeCanvas()"
+            height="90%"
+            id="contentContainer"
+          >
+            <v-btn
+              class="primary secondary--text"
+              v-if="tabCheck() == false"
+              to="/ProjectsGrid"
+            >Back</v-btn>
             <!-- content -->
 
             <router-view />
