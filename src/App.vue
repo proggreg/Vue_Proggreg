@@ -5,17 +5,12 @@
     <v-main class="primary" style="display: flex; justify-content: center; align-content: center">
       <v-container style="display:flex; height: 100%;" fluid>
         <v-layout justify-center align-center>
-          <v-card
-            class="pa-8 secondary"
-            v-on:gameStarted="makeCanvas()"
-            height="90%"
-            id="contentContainer"
-          >
-            <v-btn
+          <v-card class="pa-8 secondary" v-on:gameStarted="makeCanvas()" id="contentContainer">
+            <!-- <v-btn
               class="primary secondary--text"
               v-if="tabCheck() == false"
               to="/ProjectsGrid"
-            >Back</v-btn>
+            >Back</v-btn>-->
             <!-- content -->
 
             <router-view />
@@ -49,7 +44,6 @@ export default {
       return false;
     },
     makeCanvas() {
-      console.log("game started");
       let contentContainer = document.getElementById("app");
       contentContainer.style.touchAction = "none";
     },
@@ -72,9 +66,10 @@ body,
 #contentContainer {
   @media screen and (max-width: 600px) {
     padding: 5% !important;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
   }
+  height: 90%;
   width: 90%;
 }
 </style>

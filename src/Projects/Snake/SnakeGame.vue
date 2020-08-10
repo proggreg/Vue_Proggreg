@@ -2,7 +2,7 @@
   <div class="snakegame" style="touch-action: none;">
     <v-container style="touch-action: none;" fluid>
       <v-row>
-        <v-col></v-col>
+        <v-col v-if="showScores != true"></v-col>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center primary--text">Current Score: {{score}}</h3>
           <v-layout class="border">
@@ -18,25 +18,33 @@
         </v-col>
 
         <v-col v-if="gameState === 'END' || showScores === true">
-          <ScoreBoard @updateTopScore="updateTopScore" v-on:LoadGame="this.reset" ref="scoreBoard" />
+          <ScoreBoard @updateTopScore="updateScores()" v-on:LoadGame="reset()" ref="scoreBoard" />
         </v-col>
 
-        <v-col>
+        <v-col v-if="showScores != true">
           <v-layout justify-center>
-            <div v-if="topFiveScores.length != 0" id="topScores">
-              <h2 style="margin-bottom: 20px" class="text-center">Top 5 Scores</h2>
-              <ul style="list-style:none">
-                <li style="display:flex" v-for="(score,i) in topFiveScores" :key="score._id">
-                  <div style="margin-left: -24px; width: 10px">{{i+1}}</div>
-                  <p style="padding-left: 10px; margin: 0">
-                    <b>Name:</b>
-                    {{score.username}}
-                    <br />
-                    <b>Score:</b>
-                    {{score.score}}
-                  </p>
-                </li>
-              </ul>
+            <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
+              <h2 style="margin-bottom: 20px" class="text-center primary--text">Top 5 Scores</h2>
+              <v-list style="background: none">
+                <v-list-item v-for="(score,i) in topFiveScores" :key="score._id">
+                  <v-list-item-content>
+                    <v-layout>
+                      <v-col style="flex-grow: 0">
+                        <h3 class="primary--text">{{i+1}}</h3>
+                      </v-col>
+                      <v-col>
+                        <v-list-item-title class="primary--text">{{score.username}}</v-list-item-title>
+                      </v-col>
+                      <v-col>
+                        <v-list-item-subtitle
+                          style="float: right;"
+                          class="primary--text"
+                        >{{score.score}}</v-list-item-subtitle>
+                      </v-col>
+                    </v-layout>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
             </div>
           </v-layout>
         </v-col>
@@ -59,7 +67,6 @@ export default {
     Axios.get(url)
       .then((res) => {
         this.topFiveScores = res.data.slice(0, 5);
-        console.log(this.topFiveScores);
       })
       .catch((err) => console.log(err));
   },
@@ -92,6 +99,7 @@ export default {
       yDown: null,
       showScores: false,
       topFiveScores: [],
+      showTopFive: true,
     };
   },
   methods: {
@@ -105,15 +113,15 @@ export default {
       //     window.scrollTo(scrollLeft, scrollTop);
       //   });
     },
-    updateTopScore(newTopSore) {
-      this.topScore = newTopSore;
+    updateScores() {
+      this.showScoreBoard();
     },
     showScoreBoard() {
+      console.log("Show Scores");
+      this.showTopFive = false;
       this.showScores = true;
       this.$mount();
-      console.log(this.$refs.scoreBoard);
       this.$refs.scoreBoard.showScoreBoard = true;
-      this.$refs.scoreBoard.getScores();
       this.gameState = "PAUSED";
     },
     start() {
@@ -135,10 +143,7 @@ export default {
       this.gameState = "RUNNING";
       requestAnimationFrame(this.draw);
 
-      // this.$emit("gameStarted");
-      // this.$parent["$el"].$emit("myevent", { data: 123 });
       let vm = this.$parent;
-
       while (vm) {
         vm.$emit("gameStarted");
         vm = vm.$parent;
@@ -328,9 +333,9 @@ export default {
     },
     reset() {
       this.gameState = "SETUP";
+      this.showScores = false;
     },
     getTouches(evt) {
-      console.log("hello");
       return evt.touches || evt.originalEvent.touches;
     },
     handleTouchStart(evt) {

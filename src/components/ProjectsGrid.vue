@@ -41,11 +41,7 @@ export default {
       ],
     };
   },
-  methods: {
-    makeCanvas() {
-      document.querySelector("");
-    },
-  },
+  methods: {},
 };
 </script>
 <style lang="scss">

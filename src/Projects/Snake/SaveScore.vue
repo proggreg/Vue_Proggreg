@@ -3,7 +3,7 @@
     <!-- TODO would be better to not have the text field move when error message is shown -->
     <v-card-text
       style="font-size:20px"
-      class="text-center font-weight-bold"
+      class="text-center font-weight-bold primary--text"
       v-model="score"
     >Your Score: {{score}}</v-card-text>
     <v-card-text class="text-center red--text font-weight-bold" v-text="this.error"></v-card-text>
@@ -16,7 +16,7 @@
 
     <v-btn
       @click="checkName"
-      class="mr-4 primary"
+      class="mr-4 primary secondary--text"
       style="display: flex; margin: auto auto 0 auto !important; "
     >Save</v-btn>
   </v-form>
@@ -68,9 +68,17 @@ export default {
   .text-center {
     text-align: center;
     font-size: 16px;
+    .v-input__slot::before {
+      border-color: var(--v-primary-base) !important;
+    }
+
+    input::placeholder {
+      opacity: 0.8;
+      color: var(--v-primary-base);
+    }
     input {
       text-align: center;
-      // filter: invert(100%);
+      color: var(--v-primary-base);
     }
   }
 }

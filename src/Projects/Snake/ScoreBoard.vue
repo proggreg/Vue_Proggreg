@@ -3,13 +3,13 @@
     <v-layout column justify-center>
       <v-row v-if="showScoreBoard" style="margin: 0 auto">
         <v-col>
-          <h1 style="white-space: nowrap" class="text-center">Scores</h1>
+          <h1 style="white-space: nowrap" class="text-center primary--text">Scores</h1>
         </v-col>
       </v-row>
       <v-row v-if="showScoreBoard" style=" min-width: 100%" align="center">
         <v-col class="navCol">
           <v-btn
-            class="secondary"
+            class="secondary primary--text"
             style="float: right;"
             rounded
             v-if="start > 0"
@@ -17,33 +17,50 @@
           >Back</v-btn>
         </v-col>
         <v-col style="padding: 0" align-self="start">
-          <ol style="list-style: none; padding: 0">
-            <li v-for="(score,index) in filterlist" :key="score._id">
-              {{index + 1 + start}} {{score.username}}
-              <span style="float: right;">{{score.score}}</span>
-            </li>
-          </ol>
+          <v-list dense style="background: none">
+            <v-list-item
+              style="padding:0; margin:0;"
+              v-for="(score,i) in filterlist"
+              :key="score._id"
+            >
+              <v-list-item-content style="padding: 0">
+                <v-layout>
+                  <v-col style="flex-grow: 0">
+                    <h3 class="primary--text">{{start+i+1}}</h3>
+                  </v-col>
+                  <v-col>
+                    <v-list-item-title class="primary--text">{{score.username}}</v-list-item-title>
+                  </v-col>
+                  <v-col>
+                    <v-list-item-subtitle
+                      style="float: right;"
+                      class="primary--text"
+                    >{{score.score}}</v-list-item-subtitle>
+                  </v-col>
+                </v-layout>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
         <v-col class="navCol">
           <v-btn
             style="margin: 0 auto"
-            class="primary"
+            class="primary secondary--text"
             rounded
             v-if="end < scores.length"
             @click="moveForward()"
           >next</v-btn>
         </v-col>
       </v-row>
-      <v-btn
-        @click="playAgain"
-        class="mr-4 primary"
-        style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; "
-        v-if="showScoreBoard"
-      >Play again</v-btn>
 
       <v-col align-self="start">
         <SaveScore v-if="showScoreBoard == false" v-on:getNewScores="getScores" ref="saveScore" />
       </v-col>
+      <v-btn
+        @click="playAgain"
+        class="mr-4 primary secondary--text"
+        style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; "
+      >Play again</v-btn>
     </v-layout>
   </div>
 </template>
@@ -57,38 +74,50 @@ export default {
   components: {
     SaveScore,
   },
+  beforeUpdate: function () {
+    var data;
+    axios
+      .get(url)
+      .then((res) => {
+        data = res.data;
+        this.scores = data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
   methods: {
     getScores() {
       // TODO not delt with draws
+
+      var data;
       axios
         .get(url)
         .then((res) => {
-          this.scores = res.data;
-          console.log(this.scores);
-          this.$emit("updateTopScore", res.data);
+          data = res.data;
+          this.scores = data;
         })
         .catch((err) => {
           console.log(err);
         });
 
-      this.showScoreBoard = true;
+      this.$emit("updateTopScore");
     },
     sendScore(score) {
       this.$refs.saveScore.setScore(score);
     },
     playAgain() {
       this.$emit("LoadGame");
+      this.showScoreBoard = false;
+      this.$mount();
     },
     moveBackward() {
-      console.log("Backward");
       this.start -= 10;
       this.end -= 10;
     },
     moveForward() {
-      console.log("forward");
       this.start += 10;
       this.end += 10;
-      // this.filterlist();
     },
   },
   data() {
