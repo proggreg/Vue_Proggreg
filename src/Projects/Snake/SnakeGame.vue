@@ -1,7 +1,7 @@
 <template>
-  <div class="snakegame" style="touch-action: none;">
-    <v-container style="touch-action: none;" fluid>
-      <v-row>
+  <v-layout justify-center align-center class="snakegame fill-height" style="touch-action: none;">
+    <v-container fluid class="pa-12 fill-height" style="touch-action: none;">
+      <v-row class="fill-height" style="height: 100%">
         <v-col v-if="showScores != true"></v-col>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center primary--text">Current Score: {{score}}</h3>
@@ -9,6 +9,7 @@
             <canvas width="200" height="200" class="absolute-center" id="canvas" />
           </v-layout>
           <v-btn
+            id="startBtn"
             v-if="this.controlMessage =='Start'"
             v-text="this.controlMessage"
             @click="start()"
@@ -16,11 +17,12 @@
             style="display: flex; margin: 20px auto 0 auto !important; "
           ></v-btn>
         </v-col>
-
-        <v-col v-if="gameState === 'END' || showScores === true">
-          <ScoreBoard @updateTopScore="updateScores()" v-on:LoadGame="reset()" ref="scoreBoard" />
-        </v-col>
-
+        <ScoreBoard
+          v-if="gameState == 'END'"
+          @updateScores="updateTopScores"
+          v-on:LoadGame="reset()"
+          ref="scoreBoard"
+        />
         <v-col v-if="showScores != true">
           <v-layout justify-center>
             <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
@@ -50,7 +52,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </v-layout>
 </template>
 <script>
 import ScoreBoard from "./ScoreBoard";
@@ -83,7 +85,7 @@ export default {
       scale: 20,
       snake: {
         body: [{ x: 0, y: 0 }],
-        color: "rgb(61, 171, 0)",
+        color: "",
       },
       food: {
         x: 100,
@@ -113,21 +115,19 @@ export default {
       //     window.scrollTo(scrollLeft, scrollTop);
       //   });
     },
-    updateScores() {
+    updateTopScores(newScores) {
+      this.topFiveScores = newScores.slice(0, 5);
       this.showScoreBoard();
     },
     showScoreBoard() {
-      console.log("Show Scores");
       this.showTopFive = false;
       this.showScores = true;
       this.$mount();
       this.$refs.scoreBoard.showScoreBoard = true;
-      this.gameState = "PAUSED";
     },
     start() {
       // add event listener to listen for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
-
       // Mobile control listeners
       document.addEventListener("touchstart", this.handleTouchStart, false);
       document.addEventListener("touchmove", this.handleTouchMove, false);
@@ -167,9 +167,11 @@ export default {
       this.snake.body[this.score] = { x, y };
 
       // TODO implement rounded corners
+      // TODO get primary color from vuetify theme
+      this.currentThemeColor();
       // draw snake
       this.vueCanvas.fillStyle = this.snake.color;
-      this.vueCanvas.lineJoin = "round";
+      // this.vueCanvas.lineJoin = "round";
       this.snake.body.forEach((body) =>
         this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale)
       );
@@ -294,10 +296,12 @@ export default {
     },
     die() {
       this.vueCanvas.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      // reset game
+
       this.gameState = "END";
       this.$mount();
       this.$refs.scoreBoard.sendScore(this.score);
+
+      // resetting game
       this.snake.body = [{ x: 0, y: 0 }];
       this.snake.x = 0;
       this.snake.y = 0;
@@ -400,6 +404,9 @@ export default {
       var elem = document.getElementById("app");
       var c = getComputedStyle(elem).getPropertyValue("--v-primary-base");
       this.snake.color = c;
+
+      var fc = getComputedStyle(elem).getPropertyValue("--v-accent-base");
+      this.food.color = fc;
     },
   },
 };
@@ -418,8 +425,8 @@ export default {
 }
 
 canvas {
-  filter: invert(100%);
-  mix-blend-mode: difference;
+  // filter: invert(100%);
+  // mix-blend-mode: difference;
   position: relative;
 }
 </style>

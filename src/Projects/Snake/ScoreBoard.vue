@@ -1,5 +1,5 @@
 <template>
-  <div id="scoreboard">
+  <v-col id="scoreboard">
     <v-layout column justify-center>
       <v-row v-if="showScoreBoard" style="margin: 0 auto">
         <v-col>
@@ -55,14 +55,14 @@
 
       <v-col align-self="start">
         <SaveScore v-if="showScoreBoard == false" v-on:getNewScores="getScores" ref="saveScore" />
+        <v-btn
+          @click="playAgain"
+          class="mr-4 primary secondary--text"
+          style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; margin-top: 20px "
+        >Play again</v-btn>
       </v-col>
-      <v-btn
-        @click="playAgain"
-        class="mr-4 primary secondary--text"
-        style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; "
-      >Play again</v-btn>
     </v-layout>
-  </div>
+  </v-col>
 </template>
 <script>
 import SaveScore from "./SaveScore";
@@ -72,17 +72,18 @@ const url = process.env.VUE_APP_API_URL + "/api/users";
 export default {
   name: "ScoreBoard",
   components: {
-    SaveScore,
+    SaveScore
   },
-  beforeUpdate: function () {
+  mounted() {},
+  updated: function() {
     var data;
     axios
       .get(url)
-      .then((res) => {
+      .then(res => {
         data = res.data;
         this.scores = data;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   },
@@ -93,15 +94,14 @@ export default {
       var data;
       axios
         .get(url)
-        .then((res) => {
+        .then(res => {
           data = res.data;
           this.scores = data;
+          this.$emit("updateScores", data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
-
-      this.$emit("updateTopScore");
     },
     sendScore(score) {
       this.$refs.saveScore.setScore(score);
@@ -118,16 +118,16 @@ export default {
     moveForward() {
       this.start += 10;
       this.end += 10;
-    },
+    }
   },
   data() {
     return { scores: [], showScoreBoard: false, start: 0, end: 10 };
   },
   computed: {
-    filterlist: function () {
+    filterlist: function() {
       return this.scores.slice(this.start, this.end);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">

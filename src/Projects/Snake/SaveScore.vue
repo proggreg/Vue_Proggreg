@@ -7,6 +7,7 @@
       v-model="score"
     >Your Score: {{score}}</v-card-text>
     <v-card-text class="text-center red--text font-weight-bold" v-text="this.error"></v-card-text>
+
     <v-text-field
       style="width: max-content; margin: 0 auto;"
       class="text-center"
@@ -30,7 +31,7 @@ export default {
     username: "",
     score: 0,
     showButton: false,
-    error: "",
+    error: ""
   }),
   methods: {
     sendData() {
@@ -42,7 +43,7 @@ export default {
         .then(() => {
           this.$emit("getNewScores");
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
     setScore(score) {
       this.showButton = true;
@@ -57,8 +58,8 @@ export default {
         this.error = "";
         return this.sendData();
       }
-    },
-  },
+    }
+  }
 };
 </script>
  

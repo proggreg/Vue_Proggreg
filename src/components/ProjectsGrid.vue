@@ -29,11 +29,6 @@ export default {
           title: "Snake",
           href: "/Snake",
         },
-        // ,
-        // {
-        //   title: "TwitterBot",
-        //   href: "/TwitterBot",
-        // },
         // {
         //   title: "Synth",
         //   href: "/Synth",
