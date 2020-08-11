@@ -395,6 +395,12 @@ export default {
       this.xDown = null;
       this.yDown = null;
     },
+    currentThemeColor() {
+      // TODO improvement only change when theme is changed
+      var elem = document.getElementById("app");
+      var c = getComputedStyle(elem).getPropertyValue("--v-primary-base");
+      this.snake.color = c;
+    },
   },
 };
 </script>
