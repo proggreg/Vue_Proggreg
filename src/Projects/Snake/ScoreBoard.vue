@@ -72,18 +72,19 @@ const url = process.env.VUE_APP_API_URL + "/api/users";
 export default {
   name: "ScoreBoard",
   components: {
-    SaveScore
+    SaveScore,
   },
   mounted() {},
-  updated: function() {
+  updated: function () {
+    // TODO stop redundant calls
     var data;
     axios
       .get(url)
-      .then(res => {
+      .then((res) => {
         data = res.data;
         this.scores = data;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   },
@@ -94,12 +95,12 @@ export default {
       var data;
       axios
         .get(url)
-        .then(res => {
+        .then((res) => {
           data = res.data;
           this.scores = data;
           this.$emit("updateScores", data);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -118,16 +119,16 @@ export default {
     moveForward() {
       this.start += 10;
       this.end += 10;
-    }
+    },
   },
   data() {
     return { scores: [], showScoreBoard: false, start: 0, end: 10 };
   },
   computed: {
-    filterlist: function() {
+    filterlist: function () {
       return this.scores.slice(this.start, this.end);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

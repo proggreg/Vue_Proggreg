@@ -3,14 +3,14 @@
   <v-app class="primary" id="app">
     <Header />
     <v-main class="primary" style="display: flex; justify-content: center; align-content: center">
-      <v-container style="display:flex; height: 100%;" fluid>
+      <v-container style="display:flex;" class="fill-height pa-0 v-textarea--auto-grow" fluid>
         <v-layout justify-center align-center>
-          <v-card class="pa-8 secondary" v-on:gameStarted="makeCanvas()" id="contentContainer">
-            <!-- <v-btn
+          <v-card class="pa-6 secondary" v-on:gameStarted="makeCanvas()" id="contentContainer">
+            <v-btn
               class="primary secondary--text"
               v-if="tabCheck() == false"
               to="/ProjectsGrid"
-            >Back</v-btn>-->
+            >Back</v-btn>
             <!-- content -->
 
             <router-view />

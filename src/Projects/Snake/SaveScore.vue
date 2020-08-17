@@ -6,7 +6,15 @@
       class="text-center font-weight-bold primary--text"
       v-model="score"
     >Your Score: {{score}}</v-card-text>
-    <v-card-text class="text-center red--text font-weight-bold" v-text="this.error"></v-card-text>
+    <v-container style="height: 20px">
+      <v-fade-transition>
+        <v-card-text
+          v-if="error"
+          class="text-center red--text font-weight-bold pa-0"
+          v-text="this.error"
+        ></v-card-text>
+      </v-fade-transition>
+    </v-container>
 
     <v-text-field
       style="width: max-content; margin: 0 auto;"
@@ -24,6 +32,8 @@
 </template>
 <script>
 const axios = require("axios");
+const Filter = require("bad-words"),
+  filter = new Filter();
 
 export default {
   name: "SaveScore",
@@ -31,7 +41,7 @@ export default {
     username: "",
     score: 0,
     showButton: false,
-    error: ""
+    error: "",
   }),
   methods: {
     sendData() {
@@ -43,7 +53,7 @@ export default {
         .then(() => {
           this.$emit("getNewScores");
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     },
     setScore(score) {
       this.showButton = true;
@@ -54,12 +64,16 @@ export default {
         this.error = "Name is required.";
       } else if (this.username.length > 30) {
         this.error = "Name must be less than 30 characters, sorry.";
+      } else if (filter.isProfane(this.username)) {
+        this.error = "Please don't use bad words.";
       } else {
+        this.username = filter.clean(this.username);
+        console.log(filter.clean(this.username));
         this.error = "";
         return this.sendData();
       }
-    }
-  }
+    },
+  },
 };
 </script>
  

@@ -1,19 +1,39 @@
 <template>
   <v-form id="contactForm" @submit.prevent>
-    <v-layout column class="text--red" style="color: red">
-      <v-card-text class="primary--text" v-model="nameerror">{{nameerror}}</v-card-text>
+    <v-layout column class="text--red pa-0" style="color: red">
+      <v-container class="pa-0">
+        <v-fade-transition>
+          <v-card-text class="pa-0" v-if="nameerror" v-model="nameerror">{{nameerror}}</v-card-text>
+        </v-fade-transition>
+      </v-container>
       <v-text-field class="myClass" v-model="name" placeholder="Your Name"></v-text-field>
-      <v-card-text v-model="emailerror">{{emailerror}}</v-card-text>
+      <v-container class="pa-0">
+        <v-fade-transition>
+          <v-card-text class="pa-0" v-if="emailerror" v-model="emailerror">{{emailerror}}</v-card-text>
+        </v-fade-transition>
+      </v-container>
       <v-text-field class="primary--text" v-model="email" placeholder="Your Email"></v-text-field>
-      <v-card-text v-model="subjecterror">{{subjecterror}}</v-card-text>
-      <v-text-field class="text-green" v-model="subject" placeholder="Subject"></v-text-field>
-      <v-card-text v-model="messageerror">{{messageerror}}</v-card-text>
-      <v-textarea class="messageBox" placeholder="Your Message" auto-grow v-model="message"></v-textarea>
-      <v-btn
-        class="mr-4 primary secondary--text"
-        @click="validateForm()"
-        style="display: flex; margin: auto auto 0 auto !important; "
-      >Send</v-btn>
+      <v-container class="pa-0">
+        <v-fade-transition>
+          <v-card-text class="pa-0" v-if="subjecterror" v-model="subjecterror">{{subjecterror}}</v-card-text>
+        </v-fade-transition>
+      </v-container>
+      <v-text-field class="pa-0" v-model="subject" placeholder="Subject"></v-text-field>
+      <v-container class="pa-0">
+        <v-fade-transition>
+          <v-card-text class="pa-0" v-if="messageerror" v-model="messageerror">{{messageerror}}</v-card-text>
+        </v-fade-transition>
+      </v-container>
+
+      <v-textarea
+        style="margin-bottom:100px"
+        class="messageBox"
+        placeholder="Your Message"
+        auto-grow
+        v-model="message"
+      ></v-textarea>
+
+      <v-btn style="top: -100px" class="primary secondary--text" @click="validateForm()">Send</v-btn>
     </v-layout>
   </v-form>
 </template>
@@ -90,6 +110,9 @@ export default {
 // TODO Add cache so form information is stored in local storage, this should prevent information being lost when tab switching
 
 <style lang="scss">
+.container {
+  padding: 0;
+}
 #contactForm {
   @media screen and (max-width: 1000px) {
     width: 100%;

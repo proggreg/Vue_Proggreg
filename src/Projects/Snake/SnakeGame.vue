@@ -1,8 +1,8 @@
 <template>
   <v-layout justify-center align-center class="snakegame fill-height" style="touch-action: none;">
-    <v-container fluid class="pa-12 fill-height" style="touch-action: none;">
+    <v-container fluid class="pa-0 fill-height" style="touch-action: none;">
       <v-row class="fill-height" style="height: 100%">
-        <v-col v-if="showScores != true"></v-col>
+        <v-col v-if="showScores === false"></v-col>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
           <h3 style="margin-bottom: 20px" class="text-center primary--text">Current Score: {{score}}</h3>
           <v-layout class="border">
@@ -23,7 +23,7 @@
           v-on:LoadGame="reset()"
           ref="scoreBoard"
         />
-        <v-col v-if="showScores != true">
+        <v-col v-if="showScores === false">
           <v-layout justify-center>
             <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
               <h2 style="margin-bottom: 20px" class="text-center primary--text">Top 5 Scores</h2>
@@ -47,6 +47,9 @@
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
+            </div>
+            <div v-else id="topScores" style="padding: 0; width: 100%;">
+              <h2 style="margin-bottom: 20px" class="text-center primary--text">Loading Top Scores</h2>
             </div>
           </v-layout>
         </v-col>
