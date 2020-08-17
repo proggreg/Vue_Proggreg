@@ -108,15 +108,43 @@ export default {
     };
   },
   methods: {
-    disableScroll() {
-      // TODO impletment this
-      // Get the current page scroll position
-      // let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      // (scrollLeft = window.pageXOffset || document.documentElement.scrollLeft),
-      //   // if any scroll is attempted, set this to the previous value
-      //   (window.onscroll = function () {
-      //     window.scrollTo(scrollLeft, scrollTop);
-      //   });
+    roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+      if (typeof stroke === "undefined") {
+        stroke = true;
+      }
+      if (typeof radius === "undefined") {
+        radius = 5;
+      }
+      if (typeof radius === "number") {
+        radius = { tl: radius, tr: radius, br: radius, bl: radius };
+      } else {
+        var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+        for (var side in defaultRadius) {
+          radius[side] = radius[side] || defaultRadius[side];
+        }
+      }
+      ctx.beginPath();
+      ctx.moveTo(x + radius.tl, y);
+      ctx.lineTo(x + width - radius.tr, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+      ctx.lineTo(x + width, y + height - radius.br);
+      ctx.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - radius.br,
+        y + height
+      );
+      ctx.lineTo(x + radius.bl, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+      ctx.lineTo(x, y + radius.tl);
+      ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+      ctx.closePath();
+      if (fill) {
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.stroke();
+      }
     },
     updateTopScores(newScores) {
       this.topFiveScores = newScores.slice(0, 5);
@@ -158,10 +186,17 @@ export default {
       );
     },
     drawfood: function () {
-      this.vueCanvas.beginPath();
       this.vueCanvas.fillStyle = this.food.color;
-      this.vueCanvas.rect(this.food.x, this.food.y, this.scale, this.scale);
-      this.vueCanvas.fill();
+      this.roundRect(
+        this.vueCanvas,
+        this.food.x + 2,
+        this.food.y + 2,
+        this.scale - 2,
+        this.scale - 2,
+        5,
+        true,
+        true
+      );
     },
     updateSnake: function (x, y) {
       for (let i = 0; i < this.snake.body.length - 1; i++) {
@@ -170,14 +205,24 @@ export default {
       this.snake.body[this.score] = { x, y };
 
       // TODO implement rounded corners
-      // TODO get primary color from vuetify theme
+
       this.currentThemeColor();
       // draw snake
       this.vueCanvas.fillStyle = this.snake.color;
-      // this.vueCanvas.lineJoin = "round";
-      this.snake.body.forEach((body) =>
-        this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale)
-      );
+
+      this.snake.body.forEach((body) => {
+        // this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale);
+        this.roundRect(
+          this.vueCanvas,
+          body.x + 2,
+          body.y + 2,
+          this.scale - 2,
+          this.scale - 2,
+          5,
+          true,
+          true
+        );
+      });
     },
     moveSnake(d) {
       let headpos = this.snake.body.length - 1;
