@@ -37,7 +37,7 @@ export default {
           component: "/Contact",
         },
       ],
-      isMobile: mobilecheck(),
+      isMobile: mobileCheck(),
     };
   },
 };

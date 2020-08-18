@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
+    "dev": "concurrently \"cd .. && cd proggreg-backend && npm run dev\" \"vue-cli-service serve\"",
     "test": "jest",
     "serve": "vue-cli-service serve -m production",
     "build": "vue-cli-service build",

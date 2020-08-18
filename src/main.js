@@ -12,7 +12,7 @@ window.myGlobal = function () {
   console.log("Hello Global");
 }
 
-window.mobilecheck = function () {
+window.mobileCheck = function () {
   let check = false;
   (function (a) {
     // eslint-disable-next-line no-useless-escape

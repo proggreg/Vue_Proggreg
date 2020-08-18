@@ -2,17 +2,16 @@
 <template >
   <v-app class="primary" id="app">
     <Header />
-    <v-main class="primary" style="display: flex; justify-content: center; align-content: center">
-      <v-container style="display:flex;" class="fill-height pa-0 v-textarea--auto-grow" fluid>
+    <v-main class="primary">
+      <v-container class="fill-height pa-0 v-textarea--auto-grow" fluid>
         <v-layout justify-center align-center>
-          <v-card class="pa-6 secondary" v-on:gameStarted="makeCanvas()" id="contentContainer">
+          <v-card class="pa-6 secondary" id="contentContainer">
             <v-btn
               class="primary secondary--text"
               v-if="tabCheck() == false"
               to="/ProjectsGrid"
             >Back</v-btn>
             <!-- content -->
-
             <router-view />
           </v-card>
         </v-layout>
@@ -42,10 +41,6 @@ export default {
         return true;
       }
       return false;
-    },
-    makeCanvas() {
-      let contentContainer = document.getElementById("app");
-      contentContainer.style.touchAction = "none";
     },
   },
 };

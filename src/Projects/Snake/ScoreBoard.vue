@@ -1,6 +1,6 @@
 <template>
-  <v-col id="scoreboard">
-    <v-layout column justify-center>
+  <v-card class="pa-4 primary--text secondary lighten-2" id="scoreboard">
+    <v-layout column justify-center align-center>
       <v-row v-if="showScoreBoard" style="margin: 0 auto">
         <v-col>
           <h1 style="white-space: nowrap" class="text-center primary--text">Scores</h1>
@@ -53,7 +53,7 @@
         </v-col>
       </v-row>
 
-      <v-col align-self="start">
+      <v-col align-self="center">
         <SaveScore v-if="showScoreBoard == false" v-on:getNewScores="getScores" ref="saveScore" />
         <v-btn
           @click="playAgain"
@@ -62,7 +62,7 @@
         >Play again</v-btn>
       </v-col>
     </v-layout>
-  </v-col>
+  </v-card>
 </template>
 <script>
 import SaveScore from "./SaveScore";
@@ -74,31 +74,37 @@ export default {
   components: {
     SaveScore,
   },
-  mounted() {},
+  mounted() {
+    // this.getScores();
+  },
   updated: function () {
     // TODO stop redundant calls
-    var data;
-    axios
-      .get(url)
-      .then((res) => {
-        data = res.data;
-        this.scores = data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // TODO record device type eg browser or mobile
+    // var data;
+    // axios
+    //   .get(url)
+    //   .then((res) => {
+    //     data = res.data;
+    //     this.scores = data;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   },
   methods: {
     getScores() {
       // TODO not delt with draws
 
-      var data;
+      console.log("getting scores");
+
       axios
         .get(url)
         .then((res) => {
-          data = res.data;
-          this.scores = data;
-          this.$emit("updateScores", data);
+          return (this.scores = res.data);
+        })
+        .then(() => {
+          console.log("score retreieved");
+          this.$emit("updateScores", this.scores);
         })
         .catch((err) => {
           console.log(err);

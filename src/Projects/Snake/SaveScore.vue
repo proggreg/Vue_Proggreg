@@ -1,6 +1,5 @@
 <template>
   <v-form class="saveScoreForm" @submit.prevent>
-    <!-- TODO would be better to not have the text field move when error message is shown -->
     <v-card-text
       style="font-size:20px"
       class="text-center font-weight-bold primary--text"
@@ -21,10 +20,12 @@
       class="text-center"
       v-model="username"
       placeholder="Username"
+      id="username_input"
     ></v-text-field>
 
     <v-btn
       @click="checkName"
+      id="saveBtn"
       class="mr-4 primary secondary--text"
       style="display: flex; margin: auto auto 0 auto !important; "
     >Save</v-btn>
@@ -43,6 +44,16 @@ export default {
     showButton: false,
     error: "",
   }),
+  mounted() {
+    // add event listener to enter key to submit score
+    var input = document.getElementById("username_input");
+    input.addEventListener("keyup", function (event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("saveBtn").click();
+      }
+    });
+  },
   methods: {
     sendData() {
       var data = { username: this.username, score: this.score };
@@ -68,7 +79,6 @@ export default {
         this.error = "Please don't use bad words.";
       } else {
         this.username = filter.clean(this.username);
-        console.log(filter.clean(this.username));
         this.error = "";
         return this.sendData();
       }

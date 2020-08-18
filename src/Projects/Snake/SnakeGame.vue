@@ -1,57 +1,73 @@
 <template>
-  <v-layout justify-center align-center class="snakegame fill-height" style="touch-action: none;">
-    <v-container fluid class="pa-0 fill-height" style="touch-action: none;">
+  <v-layout justify-center align-center class="snakegame fill-height">
+    <v-container fluid class="pa-0 fill-height">
+      <!-- Instructions -->
       <v-row class="fill-height" style="height: 100%">
-        <v-col v-if="showScores === false"></v-col>
-        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <h3 style="margin-bottom: 20px" class="text-center primary--text">Current Score: {{score}}</h3>
-          <v-layout class="border">
-            <canvas width="200" height="200" class="absolute-center" id="canvas" />
-          </v-layout>
-          <v-btn
-            id="startBtn"
-            v-if="this.controlMessage =='Start'"
-            v-text="this.controlMessage"
-            @click="start()"
-            class="mr-4 primary secondary--text"
-            style="display: flex; margin: 20px auto 0 auto !important; "
-          ></v-btn>
-        </v-col>
-        <ScoreBoard
-          v-if="gameState == 'END'"
-          @updateScores="updateTopScores"
-          v-on:LoadGame="reset()"
-          ref="scoreBoard"
-        />
         <v-col v-if="showScores === false">
-          <v-layout justify-center>
-            <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
-              <h2 style="margin-bottom: 20px" class="text-center primary--text">Top 5 Scores</h2>
-              <v-list style="background: none">
-                <v-list-item v-for="(score,i) in topFiveScores" :key="score._id">
-                  <v-list-item-content>
-                    <v-layout>
-                      <v-col style="flex-grow: 0">
-                        <h3 class="primary--text">{{i+1}}</h3>
-                      </v-col>
-                      <v-col>
-                        <v-list-item-title class="primary--text">{{score.username}}</v-list-item-title>
-                      </v-col>
-                      <v-col>
-                        <v-list-item-subtitle
-                          style="float: right;"
-                          class="primary--text"
-                        >{{score.score}}</v-list-item-subtitle>
-                      </v-col>
-                    </v-layout>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </div>
-            <div v-else id="topScores" style="padding: 0; width: 100%;">
-              <h2 style="margin-bottom: 20px" class="text-center primary--text">Loading Top Scores</h2>
-            </div>
-          </v-layout>
+          <Instructions />
+        </v-col>
+        <!-- Snake Game -->
+        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
+          <v-card class="pa-4 secondary lighten-2">
+            <h3
+              style="margin-bottom: 20px;"
+              class="text-center primary--text"
+            >Current Score: {{score}}</h3>
+            <v-layout class="border">
+              <canvas width="200" height="200" class="absolute-center" id="canvas" />
+            </v-layout>
+            <v-btn
+              id="startBtn"
+              v-if="this.controlMessage =='Start'"
+              v-text="this.controlMessage"
+              @click="start()"
+              class="mr-4 primary secondary--text"
+              style="display: flex; margin: 20px auto 0 auto !important; "
+            ></v-btn>
+          </v-card>
+        </v-col>
+
+        <!-- ScoreBoard -->
+        <v-col v-if="gameState == 'END'">
+          <ScoreBoard @updateScores="updateTopScores" v-on:LoadGame="reset()" ref="scoreBoard" />
+        </v-col>
+
+        <!-- Top Scores -->
+        <v-col v-if="showScores === false">
+          <v-card class="pa-4 pa-4 secondary lighten-2 primary--text">
+            <v-layout justify-center class="primary--text">
+              <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
+                <h2 style="margin-bottom: 20px" class="text-center primary--text">Top 5 Scores</h2>
+                <v-list class="primary--text" style="background: none;">
+                  <v-list-item
+                    class="primary--text"
+                    v-for="(score,i) in topFiveScores"
+                    :key="score._id"
+                  >
+                    <v-list-item-content class="primary--text">
+                      <v-layout class="primary--text">
+                        <v-col style="flex-grow: 0">
+                          <h3 class>{{i+1}}</h3>
+                        </v-col>
+                        <v-col>
+                          <v-list-item-title>{{score.username}}</v-list-item-title>
+                        </v-col>
+                        <v-col>
+                          <v-list-item-subtitle
+                            class="primary--text"
+                            style="float: right;"
+                          >{{score.score}}</v-list-item-subtitle>
+                        </v-col>
+                      </v-layout>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </div>
+              <div v-else id="topScores" class="primary--text" style="padding: 0; width: 100%;">
+                <h2 style="margin-bottom: 20px" class="text-center">Loading Top Scores</h2>
+              </div>
+            </v-layout>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -59,11 +75,13 @@
 </template>
 <script>
 import ScoreBoard from "./ScoreBoard";
+import Instructions from "./Instructions";
 import Axios from "axios";
 export default {
   name: "Snake",
   components: {
     ScoreBoard,
+    Instructions,
   },
   mounted() {
     const url = process.env.VUE_APP_API_URL + "/api/users";
@@ -125,7 +143,6 @@ export default {
     showScoreBoard() {
       this.showTopFive = false;
       this.showScores = true;
-      this.$mount();
       this.$refs.scoreBoard.showScoreBoard = true;
     },
     start() {
@@ -134,6 +151,10 @@ export default {
       // Mobile control listeners
       document.addEventListener("touchstart", this.handleTouchStart, false);
       document.addEventListener("touchmove", this.handleTouchMove, false);
+
+      // disable Scroll for mobile
+      let app = document.getElementById("app");
+      app.style.touchAction = "none";
 
       // find and setup canvas
       var canvas = this.$el.querySelector("canvas");
@@ -145,12 +166,6 @@ export default {
       this.running = !this.running;
       this.gameState = "RUNNING";
       requestAnimationFrame(this.draw);
-
-      let vm = this.$parent;
-      while (vm) {
-        vm.$emit("gameStarted");
-        vm = vm.$parent;
-      }
     },
     getRandomGrid(max) {
       return (
@@ -298,6 +313,10 @@ export default {
       this.newFood();
     },
     die() {
+      // re-enable scroll for mobile
+      let app = document.getElementById("app");
+      app.style.touchAction = "unset";
+
       this.vueCanvas.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       this.gameState = "END";
