@@ -8,6 +8,7 @@
           </v-fade-transition>
         </v-container>
         <v-text-field
+          id="nameField"
           style="width: 50%; margin: 0 auto; text-align: center;"
           autofocus
           outlined
@@ -128,6 +129,18 @@ export default {
   margin: 1% 20%;
   .v-text-field--outlined fieldset {
     border-color: var(--v-primary-base);
+  }
+
+  .v-input {
+    @media screen and (max-width: 600px) {
+      width: 100% !important;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    padding: 5% !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
   }
 }
 .container {
