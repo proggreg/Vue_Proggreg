@@ -3,65 +3,65 @@
     <v-container fluid class="pa-0 fill-height">
       <!-- Instructions -->
       <v-row class="fill-height" style="height: 100%">
-        <v-col v-if="showScores === false">
+        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
           <Instructions />
         </v-col>
         <!-- Snake Game -->
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <v-card class="pa-4 secondary lighten-2">
-            <h3
-              style="margin-bottom: 20px;"
-              class="text-center primary--text"
-            >Current Score: {{score}}</h3>
-            <v-layout class="border">
-              <canvas width="200" height="200" class="absolute-center" id="canvas" />
+          <v-card class="pa-4 secondary lighten-2 absolute-center">
+            <v-layout column justify-center align-center>
+              <h3 style="margin-bottom: 20px;" class="primary--text">Current Score: {{score}}</h3>
+
+              <v-layout style="width: 200px; height: 200px" class="border">
+                <canvas width="200" height="200" id="canvas" />
+              </v-layout>
+
+              <v-layout class="mt-4" align-center justify-center>
+                <v-btn
+                  id="startBtn"
+                  v-if="this.controlMessage =='Start'"
+                  v-text="this.controlMessage"
+                  @click="start()"
+                  class="primary secondary--text center"
+                ></v-btn>
+
+                <!-- <v-btn @click="SaveImg">Save Image</v-btn> -->
+              </v-layout>
             </v-layout>
-            <v-btn
-              id="startBtn"
-              v-if="this.controlMessage =='Start'"
-              v-text="this.controlMessage"
-              @click="start()"
-              class="mr-4 primary secondary--text"
-              style="display: flex; margin: 20px auto 0 auto !important; "
-            ></v-btn>
           </v-card>
         </v-col>
 
         <!-- ScoreBoard -->
         <v-col v-if="gameState == 'END'">
-          <ScoreBoard @updateScores="updateTopScores" v-on:LoadGame="reset()" ref="scoreBoard" />
+          <v-layout justify-center align-center>
+            <ScoreBoard
+              @updateScores="updateTopScores"
+              v-on:LoadGame="reset()"
+              v-bind:score="this.score"
+              :showSaveScore="this.showScores"
+              @HideSaveScores="something"
+              ref="scoreBoard"
+            />
+          </v-layout>
         </v-col>
 
         <!-- Top Scores -->
-        <v-col v-if="showScores === false">
+        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
           <v-card class="pa-4 pa-4 secondary lighten-2 primary--text">
-            <v-layout justify-center class="primary--text">
-              <div v-if="topFiveScores.length != 0" id="topScores" style="padding: 0; width: 100%;">
-                <h2 style="margin-bottom: 20px" class="text-center primary--text">Top 5 Scores</h2>
-                <v-list class="primary--text" style="background: none;">
-                  <v-list-item
-                    class="primary--text"
-                    v-for="(score,i) in topFiveScores"
-                    :key="score._id"
-                  >
-                    <v-list-item-content class="primary--text">
-                      <v-layout class="primary--text">
-                        <v-col style="flex-grow: 0">
-                          <h3 class>{{i+1}}</h3>
-                        </v-col>
-                        <v-col>
-                          <v-list-item-title>{{score.username}}</v-list-item-title>
-                        </v-col>
-                        <v-col>
-                          <v-list-item-subtitle
-                            class="primary--text"
-                            style="float: right;"
-                          >{{score.score}}</v-list-item-subtitle>
-                        </v-col>
-                      </v-layout>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
+            <v-layout column align-center justify-center class="primary--text">
+              <h2 style="margin-bottom: 20px" class="primary--text">Top 5</h2>
+
+              <div style="width: 100%" v-if="topFive.scores.length != 0" id="topScores">
+                <v-data-table
+                  id="topFiveTable"
+                  hide-default-footer
+                  disable-pagination
+                  style="color: red"
+                  disable-sort
+                  class="secondary lighten-2 primary--text"
+                  :headers="topFive.headers"
+                  :items="topFive.scores"
+                ></v-data-table>
               </div>
               <div v-else id="topScores" class="primary--text" style="padding: 0; width: 100%;">
                 <h2 style="margin-bottom: 20px" class="text-center">Loading Top Scores</h2>
@@ -86,20 +86,23 @@ export default {
   mounted() {
     const url = process.env.VUE_APP_API_URL + "/api/users";
 
-    // window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
     Axios.get(url)
       .then((res) => {
-        this.topFiveScores = res.data.slice(0, 5);
+        for (let index = 0; index < res.data.length; index++) {
+          res.data[index].index = index + 1;
+        }
+
+        this.topFive.scores = res.data.slice(0, 5);
       })
       .catch((err) => console.log(err));
   },
   data() {
     return {
-      fpsInterval: 200, // 5 Frames Per Second
+      fpsInterval: 200, // 200 ms ~= 5 Frames Per Second
       now: 0,
       then: 0,
       elapsed: 0,
-      vueCanvas: null,
+      context: null,
       canvas: null,
       width: 200,
       height: 200,
@@ -111,22 +114,46 @@ export default {
       food: {
         x: 100,
         y: 100,
-        color: "rgb(178, 0, 0)",
+        color: "",
       },
       dir: "right",
       score: 0,
       controlMessage: "Start",
       gameState: "SETUP",
-      frameRate: 0,
       xDown: null,
       yDown: null,
+      topFive: {
+        headers: [
+          {
+            align: "end",
+            text: "Rank",
+            value: "index",
+            width: 1,
+          },
+          {
+            text: "Name",
+            value: "username",
+            align: "center",
+          },
+          {
+            text: "Score",
+            value: "score",
+            align: "end",
+          },
+        ],
+        scores: [],
+      },
       showScores: false,
-      topFiveScores: [],
-      showTopFive: true,
     };
   },
+  state: {},
   methods: {
-    roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+    // SaveImg() {
+    //   var canvas = document.getElementById("canvas");
+    //   var img = canvas.toDataURL("image/png");
+    //   document.write('<img src="' + img + '"/>');
+    // },
+    roundRect(context, x, y, width, height, radius, fill, stroke) {
       if (typeof stroke === "undefined") {
         stroke = true;
       }
@@ -141,37 +168,31 @@ export default {
           radius[side] = radius[side] || defaultRadius[side];
         }
       }
-      ctx.beginPath();
-      ctx.moveTo(x + radius.tl, y);
-      ctx.lineTo(x + width - radius.tr, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-      ctx.lineTo(x + width, y + height - radius.br);
-      ctx.quadraticCurveTo(
+      context.beginPath();
+      context.moveTo(x + radius.tl, y);
+      context.lineTo(x + width - radius.tr, y);
+      context.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+      context.lineTo(x + width, y + height - radius.br);
+      context.quadraticCurveTo(
         x + width,
         y + height,
         x + width - radius.br,
         y + height
       );
-      ctx.lineTo(x + radius.bl, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-      ctx.lineTo(x, y + radius.tl);
-      ctx.quadraticCurveTo(x, y, x + radius.tl, y);
-      ctx.closePath();
+      context.lineTo(x + radius.bl, y + height);
+      context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+      context.lineTo(x, y + radius.tl);
+      context.quadraticCurveTo(x, y, x + radius.tl, y);
+      context.closePath();
       if (fill) {
-        ctx.fill();
+        context.fill();
       }
       if (stroke) {
-        ctx.stroke();
+        context.stroke();
       }
     },
     updateTopScores(newScores) {
-      this.topFiveScores = newScores.slice(0, 5);
-      this.showScoreBoard();
-    },
-    showScoreBoard() {
-      this.showTopFive = false;
-      this.showScores = true;
-      this.$refs.scoreBoard.showScoreBoard = true;
+      this.topFive.scores = newScores.slice(0, 5);
     },
     start() {
       // add event listener to listen for arrow key presses
@@ -187,7 +208,7 @@ export default {
       // find and setup canvas
       var canvas = this.$el.querySelector("canvas");
       this.canvas = canvas;
-      this.vueCanvas = this.canvas.getContext("2d");
+      this.context = this.canvas.getContext("2d");
       this.canvas.width = this.width;
       this.canvas.height = this.height;
       this.controlMessage = "";
@@ -201,9 +222,9 @@ export default {
       );
     },
     drawfood: function () {
-      this.vueCanvas.fillStyle = this.food.color;
+      this.context.fillStyle = this.food.color;
       this.roundRect(
-        this.vueCanvas,
+        this.context,
         this.food.x + 2,
         this.food.y + 2,
         this.scale - 2,
@@ -219,16 +240,13 @@ export default {
       }
       this.snake.body[this.score] = { x, y };
 
-      // TODO implement rounded corners
-
       this.currentThemeColor();
       // draw snake
-      this.vueCanvas.fillStyle = this.snake.color;
+      this.context.fillStyle = this.snake.color;
 
       this.snake.body.forEach((body) => {
-        // this.vueCanvas.fillRect(body.x, body.y, this.scale, this.scale);
         this.roundRect(
-          this.vueCanvas,
+          this.context,
           body.x + 2,
           body.y + 2,
           this.scale - 2,
@@ -264,41 +282,25 @@ export default {
       }
     },
     draw() {
-      requestAnimationFrame(this.draw);
-
-      this.now = Date.now();
-      this.elapsed = this.now - this.then;
       switch (this.gameState) {
         case "RUNNING":
-          this.death();
+          requestAnimationFrame(this.draw);
+          this.now = Date.now();
+          this.elapsed = this.now - this.then;
           if (this.elapsed > 200) {
-            this.vueCanvas.clearRect(
-              0,
-              0,
-              this.canvas.width,
-              this.canvas.height
-            );
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.then = this.now - (this.elapsed % this.fpsInterval);
             this.moveSnake(this.dir);
+            this.death();
             this.eat();
             this.drawfood();
-            this.frameRate += 1;
           }
           break;
         case "SETUP":
-          this.vueCanvas.fillStyle = this.fontColor;
-          this.vueCanvas.font = "30px Comic Sans MS";
-          this.vueCanvas.textAlign = "center";
-          this.vueCanvas.fillText("Snake", this.width / 2, this.height / 2);
-          break;
-        case "RESET":
-          this.vueCanvas.fillStyle = this.fontColor;
-          this.vueCanvas.font = "30px Comic Sans MS";
-          this.vueCanvas.textAlign = "center";
-          this.vueCanvas.fillText("You Died", this.width / 2, this.height / 2);
-          this.running = false;
-          this.controlMessage = "Play";
-          this.dir = "right";
+          this.context.fillStyle = this.fontColor;
+          this.context.font = "30px Comic Sans MS";
+          this.context.textAlign = "center";
+          this.context.fillText("Snake", this.width / 2, this.height / 2);
           break;
 
         default:
@@ -362,39 +364,50 @@ export default {
       let app = document.getElementById("app");
       app.style.touchAction = "unset";
 
-      this.vueCanvas.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       this.gameState = "END";
-      this.$mount();
-      this.$refs.scoreBoard.sendScore(this.score);
 
       // resetting game
       this.snake.body = [{ x: 0, y: 0 }];
       this.snake.x = 0;
       this.snake.y = 0;
       this.dir = "right";
-      this.score = 0;
       this.controlMessage = "Start";
+
+      throw "Dead";
     },
     outsideCanvas() {
       let head = this.snake.body[this.snake.body.length - 1];
-      if (head.x < 0 || head.x > 200 || head.y < 0 || head.y > 200) {
+      if (
+        head.x < 0 ||
+        head.x > this.width ||
+        head.y < 0 ||
+        head.y > this.height
+      ) {
+        console.log("Outside Canvas");
         return true;
       }
       return false;
     },
     collideWithSelf() {
       let collided = false;
-      for (let index = 0; index < this.snake.body.length - 2; index++) {
-        if (
-          this.snake.body[index].x ===
-            this.snake.body[this.snake.body.length - 1].x &&
-          this.snake.body[index].y ===
-            this.snake.body[this.snake.body.length - 1].y
-        ) {
-          collided = true;
-        }
+
+      if (this.snake.body.length < 2) {
+        return collided;
       }
+      // eslint-disable-next-line for-direction
+      // for (let index = this.snake.body.length - 2; index <= 0; index--) {
+      //   if (
+      //     this.snake.body[index].x ===
+      //       this.snake.body[this.snake.body.length - 1].x &&
+      //     this.snake.body[index].y ===
+      //       this.snake.body[this.snake.body.length - 1].y
+      //   ) {
+      //     collided = true;
+      //     break;
+      //   }
+      // }
       return collided;
     },
     death() {
@@ -404,7 +417,6 @@ export default {
     },
     reset() {
       this.gameState = "SETUP";
-      this.showScores = false;
     },
     getTouches(evt) {
       return evt.touches || evt.originalEvent.touches;
@@ -479,16 +491,26 @@ export default {
 };
 </script>
 <style lang="scss">
+#topFiveTable {
+  thead {
+    th {
+      color: var(--v-primary-base);
+    }
+  }
+  tr:hover {
+    background: transparent;
+    cursor: default;
+  }
+}
 #canvas {
-  touch-action: none;
 }
 .border {
   border: 1px;
   border-style: solid;
   border-color: var(--v-primary-base);
   width: fit-content;
-  height: 202px;
-  margin: 0 auto;
+  height: fit-content;
+  // margin: 0 auto;
 }
 
 canvas {

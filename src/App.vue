@@ -6,11 +6,7 @@
       <v-container class="fill-height pa-0 v-textarea--auto-grow" fluid>
         <v-layout justify-center align-center>
           <v-card class="pa-6 secondary" id="contentContainer">
-            <v-btn
-              class="primary secondary--text"
-              v-if="tabCheck() == false"
-              to="/ProjectsGrid"
-            >Back</v-btn>
+            <v-btn class="primary secondary--text" v-if="tabCheck() == false" to="/Projects">Back</v-btn>
             <!-- content -->
             <router-view />
           </v-card>
@@ -28,15 +24,15 @@ export default {
     Header,
   },
   mounted() {
-    this.$router.push("/ProjectsGrid");
+    this.$router.push("/Projects");
   },
   methods: {
     // TODO could be improved to make check dynamic, possibly changed if routes are made nested
     tabCheck() {
       if (
-        this.$route.name == "ProjectsGrid" ||
-        this.$route.name == "AboutMe" ||
-        this.$route.name == "Contact"
+        this.$route.name === "Projects" ||
+        this.$route.name === "AboutMe" ||
+        this.$route.name === "Contact"
       ) {
         return true;
       }
@@ -64,7 +60,8 @@ body,
     width: 100% !important;
     height: 100% !important;
   }
-  height: 90%;
+  margin-top: 2%;
+  min-height: 90%;
   width: 90%;
 }
 </style>

@@ -4,13 +4,6 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 
-Vue.config.keyCodes = {
-  "arrow-keys": [37, 38, 39, 40],
-};
-
-window.myGlobal = function () {
-  console.log("Hello Global");
-}
 
 window.mobileCheck = function () {
   let check = false;

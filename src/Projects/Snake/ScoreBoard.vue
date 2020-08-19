@@ -1,66 +1,33 @@
 <template>
-  <v-card class="pa-4 primary--text secondary lighten-2" id="scoreboard">
+  <v-card style="width: 50%" class="pa-8 primary--text secondary lighten-2" id="scoreBoard">
     <v-layout column justify-center align-center>
-      <v-row v-if="showScoreBoard" style="margin: 0 auto">
+      <v-row v-if="this.snakeScores.scores.length !== 0">
         <v-col>
-          <h1 style="white-space: nowrap" class="text-center primary--text">Scores</h1>
+          <h1 style="white-space: nowrap" class="text-center primary--text">Snake High Scores!!!</h1>
         </v-col>
       </v-row>
-      <v-row v-if="showScoreBoard" style=" min-width: 100%" align="center">
-        <v-col class="navCol">
-          <v-btn
-            class="secondary primary--text"
-            style="float: right;"
-            rounded
-            v-if="start > 0"
-            @click="moveBackward()"
-          >Back</v-btn>
-        </v-col>
-        <v-col style="padding: 0" align-self="start">
-          <v-list dense style="background: none">
-            <v-list-item
-              style="padding:0; margin:0;"
-              v-for="(score,i) in filterlist"
-              :key="score._id"
-            >
-              <v-list-item-content style="padding: 0">
-                <v-layout>
-                  <v-col style="flex-grow: 0">
-                    <h3 class="primary--text">{{start+i+1}}</h3>
-                  </v-col>
-                  <v-col>
-                    <v-list-item-title class="primary--text">{{score.username}}</v-list-item-title>
-                  </v-col>
-                  <v-col>
-                    <v-list-item-subtitle
-                      style="float: right;"
-                      class="primary--text"
-                    >{{score.score}}</v-list-item-subtitle>
-                  </v-col>
-                </v-layout>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-col>
-        <v-col class="navCol">
-          <v-btn
-            style="margin: 0 auto"
-            class="primary secondary--text"
-            rounded
-            v-if="end < scores.length"
-            @click="moveForward()"
-          >next</v-btn>
-        </v-col>
-      </v-row>
-
-      <v-col align-self="center">
-        <SaveScore v-if="showScoreBoard == false" v-on:getNewScores="getScores" ref="saveScore" />
-        <v-btn
-          @click="playAgain"
-          class="mr-4 primary secondary--text"
-          style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; margin-top: 20px "
-        >Play again</v-btn>
+      <v-col align-self="center" v-if="this.snakeScores.scores.length === 0">
+        <SaveScore v-on:getNewScores="getScores" :score="this.score" ref="saveScore" />
       </v-col>
+      <v-row v-else style=" min-width: 100%">
+        <v-col align-self="center">
+          <v-layout align-center justify-center>
+            <v-data-table
+              disable-items-per-page
+              id="scoreTable"
+              disable-sort
+              class="secondary lighten-2 primary--text"
+              :headers="snakeScores.headers"
+              :items="snakeScores.scores"
+            ></v-data-table>
+          </v-layout>
+        </v-col>
+      </v-row>
+      <v-btn
+        @click="playAgain"
+        class="mr-4 primary secondary--text"
+        style="display: flex; margin: auto auto 0 auto !important; transition-timing-function: ease-in-out; margin-top: 20px "
+      >Play again</v-btn>
     </v-layout>
   </v-card>
 </template>
@@ -74,77 +41,86 @@ export default {
   components: {
     SaveScore,
   },
-  mounted() {
-    // this.getScores();
-  },
-  updated: function () {
-    // TODO stop redundant calls
-    // TODO record device type eg browser or mobile
-    // var data;
-    // axios
-    //   .get(url)
-    //   .then((res) => {
-    //     data = res.data;
-    //     this.scores = data;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  },
+  props: ["score"],
   methods: {
     getScores() {
       // TODO not delt with draws
-
-      console.log("getting scores");
-
       axios
         .get(url)
         .then((res) => {
-          return (this.scores = res.data);
+          for (let index = 0; index < res.data.length; index++) {
+            res.data[index].index = index + 1;
+          }
+          return (this.snakeScores.scores = res.data);
         })
         .then(() => {
-          console.log("score retreieved");
-          this.$emit("updateScores", this.scores);
+          console.log(this.snakeScores.scores);
+          this.$emit("updateScores", this.snakeScores.scores);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    sendScore(score) {
-      this.$refs.saveScore.setScore(score);
-    },
     playAgain() {
       this.$emit("LoadGame");
       this.showScoreBoard = false;
-      this.$mount();
-    },
-    moveBackward() {
-      this.start -= 10;
-      this.end -= 10;
-    },
-    moveForward() {
-      this.start += 10;
-      this.end += 10;
     },
   },
   data() {
-    return { scores: [], showScoreBoard: false, start: 0, end: 10 };
-  },
-  computed: {
-    filterlist: function () {
-      return this.scores.slice(this.start, this.end);
-    },
+    return {
+      snakeScores: {
+        headers: [
+          {
+            align: "end",
+            text: "Rank",
+            value: "index",
+            width: 1,
+          },
+          {
+            align: "start",
+            text: "Name",
+            value: "username",
+          },
+          {
+            align: "center",
+            text: "Score",
+            value: "score",
+          },
+        ],
+        scores: [],
+      },
+      start: 0,
+      end: 10,
+    };
   },
 };
 </script>
 <style lang="scss">
+#scoreTable {
+  width: 80%;
+  thead {
+    th {
+      color: var(--v-primary-base);
+    }
+  }
+  tr:hover {
+    background: none;
+  }
+  .v-data-footer__select .v-select__selections .v-select__selection--comma {
+    color: var(--v-primary-base);
+  }
+  .v-icon.v-icon {
+    color: var(--v-primary-base);
+  }
+  .v-text-field > .v-input__control > .v-input__slot::before {
+    border-color: var(--v-primary-base);
+  }
+}
 .navCol {
   display: flex;
   justify-content: center;
 }
 #scoreboard {
-  width: 100%;
-  height: 100%;
   display: inline-block;
   color: currentColor;
   li {

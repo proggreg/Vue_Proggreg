@@ -19,12 +19,12 @@
       style="width: max-content; margin: 0 auto;"
       class="text-center"
       v-model="username"
-      placeholder="Username"
+      placeholder="Your name"
       id="username_input"
     ></v-text-field>
 
     <v-btn
-      @click="checkName"
+      @click.prevent="checkName"
       id="saveBtn"
       class="mr-4 primary secondary--text"
       style="display: flex; margin: auto auto 0 auto !important; "
@@ -40,10 +40,10 @@ export default {
   name: "SaveScore",
   data: () => ({
     username: "",
-    score: 0,
     showButton: false,
     error: "",
   }),
+  props: ["score", "show"],
   mounted() {
     // add event listener to enter key to submit score
     var input = document.getElementById("username_input");
@@ -66,10 +66,6 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    setScore(score) {
-      this.showButton = true;
-      this.score = score;
-    },
     checkName() {
       if (!this.username) {
         this.error = "Name is required.";
@@ -79,7 +75,7 @@ export default {
         this.error = "Please don't use bad words.";
       } else {
         this.username = filter.clean(this.username);
-        this.error = "";
+        this.sh;
         return this.sendData();
       }
     },

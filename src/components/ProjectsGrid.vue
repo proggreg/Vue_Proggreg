@@ -3,20 +3,35 @@
   <v-row class="projectsGrid">
     <v-col cols="12">
       <v-row align="center" justify="center">
-        <v-col v-for="project in projects" :key="project.title">
-          <v-card class="pa-0 card primary" hover outlined ripple :to="project.href">
-            <v-layout justify-center align-center>
-              <v-img
-                contain
-                class="align-center justify-center"
-                width="200"
-                height="200"
-                :src="project.img"
-              ></v-img>
-              <v-card-title class="projectTitle secondary--text text-center" v-text="project.title"></v-card-title>
-            </v-layout>
-          </v-card>
-        </v-col>
+        <v-layout align-center justify-center>
+          <v-col align-self="center" v-for="project in projects" :key="project.title">
+            <v-row align="center" justify="center">
+              <v-card
+                width="400"
+                class="pa-0 ma-0 card primary"
+                hover
+                outlined
+                ripple
+                :to="project.href"
+                style="margin: 0 !important"
+              >
+                <v-row>
+                  <v-img
+                    contain
+                    class="align-center justify-center"
+                    width="200"
+                    height="200"
+                    :src="project.img"
+                  ></v-img>
+                  <v-card-title
+                    class="projectTitle secondary--text text-center"
+                    v-text="project.title"
+                  ></v-card-title>
+                </v-row>
+              </v-card>
+            </v-row>
+          </v-col>
+        </v-layout>
       </v-row>
     </v-col>
   </v-row>
@@ -31,18 +46,19 @@ export default {
         {
           title: "Snake",
           href: "/Snake",
-          img: "tmp_snake.png",
+          img: "snake_thumb.png",
         },
-        {
-          title: "Synth",
-          href: "/Synth",
-          img: "tmp_snyth.jpeg",
-        },
-        {
-          title: "Spotify",
-          href: "/Spotify",
-          img: "tmp_spotify.png",
-        },
+
+        // {
+        //   title: "Synth",
+        //   href: "/Synth",
+        //   img: "tmp_snyth.jpeg",
+        // },
+        // {
+        //   title: "Spotify",
+        //   href: "/Spotify",
+        //   img: "tmp_spotify.png",
+        // },
       ],
     };
   },

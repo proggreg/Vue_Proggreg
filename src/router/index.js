@@ -7,8 +7,8 @@ const routes = [{
     name: "Home"
   },
   {
-    path: '/ProjectsGrid',
-    name: "ProjectsGrid",
+    path: '/Projects',
+    name: "Projects",
     component: () =>
       import(
         /* webpackChunkName: "projectsgrid" */
