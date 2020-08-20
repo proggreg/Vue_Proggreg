@@ -19,7 +19,7 @@
               <v-layout class="mt-4" align-center justify-center>
                 <v-btn
                   id="startBtn"
-                  v-if="this.controlMessage =='Start'"
+                  v-if="this.controlMessage === 'Start'"
                   v-text="this.controlMessage"
                   @click="start()"
                   class="primary secondary--text center"
@@ -370,12 +370,9 @@ export default {
 
       // resetting game
       this.snake.body = [{ x: 0, y: 0 }];
-      this.snake.x = 0;
-      this.snake.y = 0;
+      this.newFood();
       this.dir = "right";
       this.controlMessage = "Start";
-
-      throw "Dead";
     },
     outsideCanvas() {
       let head = this.snake.body[this.snake.body.length - 1];
@@ -396,18 +393,18 @@ export default {
       if (this.snake.body.length < 2) {
         return collided;
       }
-      // eslint-disable-next-line for-direction
-      // for (let index = this.snake.body.length - 2; index <= 0; index--) {
-      //   if (
-      //     this.snake.body[index].x ===
-      //       this.snake.body[this.snake.body.length - 1].x &&
-      //     this.snake.body[index].y ===
-      //       this.snake.body[this.snake.body.length - 1].y
-      //   ) {
-      //     collided = true;
-      //     break;
-      //   }
-      // }
+      for (let index = 0; index < this.snake.body.length - 2; index++) {
+        if (
+          this.snake.body[index].x ===
+            this.snake.body[this.snake.body.length - 1].x &&
+          this.snake.body[index].y ===
+            this.snake.body[this.snake.body.length - 1].y
+        ) {
+          this.food.x = this.getRandomGrid(this.width);
+          collided = true;
+          break;
+        }
+      }
       return collided;
     },
     death() {
