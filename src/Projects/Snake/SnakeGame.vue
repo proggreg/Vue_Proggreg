@@ -195,6 +195,7 @@ export default {
       this.topFive.scores = newScores.slice(0, 5);
     },
     start() {
+      this.score = 0;
       // add event listener to listen for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
       // Mobile control listeners
