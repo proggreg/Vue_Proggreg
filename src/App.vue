@@ -3,9 +3,9 @@
   <v-app class="primary" id="app">
     <Header />
     <v-main class="primary">
-      <v-container class="fill-height pa-0 v-textarea--auto-grow" fluid>
-        <v-layout justify-center align-center>
-          <v-card class="pa-6 secondary" id="contentContainer">
+      <v-container class="pa-0 v-textarea--auto-grow fill-height" fluid>
+        <v-layout justify-center align-center class="pa-2">
+          <v-card class="pa-6 secondary rounded-xl" id="contentContainer">
             <v-btn class="primary secondary--text" v-if="tabCheck() == false" to="/Projects">Back</v-btn>
             <!-- content -->
             <router-view />
@@ -51,17 +51,15 @@ html,
 body,
 #app {
   font-family: "Exo 2", sans-serif;
-  height: 100% !important;
 }
 
 #contentContainer {
   @media screen and (max-width: 600px) {
     padding: 5% !important;
     width: 100% !important;
-    height: 100% !important;
   }
   margin-top: 2%;
   min-height: 90%;
-  width: 90%;
+  min-width: 90%;
 }
 </style>

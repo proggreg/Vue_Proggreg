@@ -8,7 +8,7 @@
             <v-row align="center" justify="center">
               <v-card
                 width="400"
-                class="pa-0 ma-0 card primary"
+                class="pa-0 ma-0 card primary rounded-xl"
                 hover
                 outlined
                 ripple

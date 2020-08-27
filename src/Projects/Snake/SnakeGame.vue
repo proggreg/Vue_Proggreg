@@ -1,14 +1,14 @@
 <template>
   <v-layout justify-center align-center class="snakegame fill-height">
-    <v-container fluid class="pa-0 fill-height">
+    <v-container fluid class="pa-0">
       <!-- Instructions -->
-      <v-row class="fill-height" style="height: 100%">
+      <v-row>
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
           <Instructions />
         </v-col>
         <!-- Snake Game -->
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <v-card class="pa-4 secondary lighten-2 absolute-center">
+          <v-card class="pa-4 secondary lighten-2 absolute-center rounded-xl">
             <v-layout column justify-center align-center>
               <h3 style="margin-bottom: 20px;" class="primary--text">Current Score: {{score}}</h3>
 
@@ -47,7 +47,7 @@
 
         <!-- Top Scores -->
         <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
-          <v-card class="pa-4 pa-4 secondary lighten-2 primary--text">
+          <v-card class="pa-0 secondary lighten-2 primary--text rounded-xl">
             <v-layout column align-center justify-center class="primary--text">
               <h2 style="margin-bottom: 20px" class="primary--text">Top 5</h2>
 

@@ -25,7 +25,7 @@ export default {
           component: "Projects",
         },
         {
-          title: "AboutMe",
+          title: "About Me",
           icon: "mdi-account-circle",
           component: "/AboutMe",
         },

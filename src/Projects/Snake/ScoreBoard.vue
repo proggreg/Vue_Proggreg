@@ -1,5 +1,5 @@
 <template>
-  <v-card style="width: 50%" class="pa-8 primary--text secondary lighten-2" id="scoreBoard">
+  <v-card class="pa-8 primary--text secondary lighten-2 rounded-xl" id="scoreBoard">
     <v-layout column justify-center align-center>
       <v-row v-if="this.snakeScores.scores.length !== 0">
         <v-col>
@@ -97,7 +97,6 @@ export default {
 </script>
 <style lang="scss">
 #scoreTable {
-  width: 80%;
   thead {
     th {
       color: var(--v-primary-base);
@@ -130,9 +129,5 @@ export default {
     filter: invert(100%);
     -webkit-backdrop-filter: invert(100%);
   }
-}
-
-form {
-  font-size: 2vw;
 }
 </style>

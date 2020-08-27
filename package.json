@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"cd .. && cd proggreg-backend && npm run dev\" \"vue-cli-service serve\"",
-    "test": "vue-cli-service test:unit",
     "serve": "vue-cli-service serve -m production",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dev": "concurrently \"cd .. && cd proggreg-backend && npm run dev\" \"vue-cli-service serve\"",
+    "test": "vue-cli-service test:unit"
   },
   "dependencies": {
     "@vue/cli-plugin-unit-jest": "^4.4.6",
@@ -33,6 +33,7 @@
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "^2.0.5",
+    "vue-cli-plugin-vuetify-preset-reply": "~1.0.4",
     "vue-jest": "^3.0.6",
     "vue-plugin-load-script": "^1.2.0",
     "vue-template-compiler": "^2.6.11",

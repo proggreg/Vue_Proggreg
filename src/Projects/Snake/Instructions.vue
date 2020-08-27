@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-4 primary--text secondary lighten-2">
+  <v-card class="pa-4 primary--text secondary lighten-2 rounded-xl">
     <v-layout column justify-center align-center>
       <v-card-title class="text-center">Controls</v-card-title>
       <v-card-text
