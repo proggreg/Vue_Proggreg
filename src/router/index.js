@@ -21,7 +21,7 @@ const routes = [{
     component: () =>
       import(
         /* webpackChunkName: "aboutme" */
-        "../components/AboutMe.vue"
+        "../views/AboutMe.vue"
       ),
   },
   {
@@ -30,7 +30,7 @@ const routes = [{
     component: () =>
       import(
         /* webpackChunkName: "contact" */
-        "../components/Contact.vue"
+        "../views/Contact.vue"
       ),
   },
   {

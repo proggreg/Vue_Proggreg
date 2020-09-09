@@ -2,7 +2,7 @@
   <v-form class="saveScoreForm" @submit.prevent>
     <v-card-text
       style="font-size:20px"
-      class="text-center font-weight-bold primary--text"
+      class="text-center font-weight-bold secondary--text"
       v-model="score"
     >Your Score: {{score}}</v-card-text>
     <v-container style="height: 20px">
@@ -14,30 +14,34 @@
         ></v-card-text>
       </v-fade-transition>
     </v-container>
-
-    <v-text-field
-      style="width: max-content; margin: 0 auto;"
-      class="text-center"
-      v-model="username"
-      placeholder="Your name"
-      id="username_input"
-    ></v-text-field>
-
+    <v-container style="width: 80%">
+      <BaseInput
+        style="text-align: center"
+        id="username_input"
+        @change="updateUsername"
+        placeholder="Name"
+      ></BaseInput>
+    </v-container>
     <v-btn
       @click.prevent="checkName"
       id="saveBtn"
-      class="mr-4 primary secondary--text"
+      class="mr-4 secondary primary--text"
       style="display: flex; margin: auto auto 0 auto !important; "
     >Save</v-btn>
   </v-form>
 </template>
 <script>
+import BaseInput from "../../components/BaseInput";
+
 const axios = require("axios");
 const Filter = require("bad-words"),
   filter = new Filter();
 
 export default {
   name: "SaveScore",
+  components: {
+    BaseInput,
+  },
   data: () => ({
     username: "",
     showButton: false,
@@ -55,14 +59,19 @@ export default {
     });
   },
   methods: {
+    updateUsername(newUsername) {
+      this.username = newUsername;
+    },
     sendData() {
       var data = { username: this.username, score: this.score };
       const url = process.env.VUE_APP_API_URL + "/api/users";
 
+      this.$store.commit("saveGame");
+
       axios
         .post(url, data)
         .then(() => {
-          this.$emit("getNewScores");
+          this.$store.dispatch("getScores");
         })
         .catch((err) => console.log(err));
     },
@@ -74,8 +83,8 @@ export default {
       } else if (filter.isProfane(this.username)) {
         this.error = "Please don't use bad words.";
       } else {
+        this.error = "";
         this.username = filter.clean(this.username);
-        this.sh;
         return this.sendData();
       }
     },
@@ -90,16 +99,16 @@ export default {
     text-align: center;
     font-size: 16px;
     .v-input__slot::before {
-      border-color: var(--v-primary-base) !important;
+      border-color: var(--v-secondary-base);
     }
 
     input::placeholder {
       opacity: 0.8;
-      color: var(--v-primary-base);
+      color: var(--v-secondary-base);
     }
     input {
       text-align: center;
-      color: var(--v-primary-base);
+      color: var(--v-secondary-base);
     }
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable */
 <template >
-  <v-app class="primary" id="app">
+  <v-app @preventScroll="preventScroll()" class="primary" id="app">
     <Header />
     <v-main class="primary">
       <v-container class="pa-0 v-textarea--auto-grow fill-height" fluid>
@@ -37,6 +37,9 @@ export default {
         return true;
       }
       return false;
+    },
+    preventScroll() {
+      console.log("prevent scroll");
     },
   },
 };

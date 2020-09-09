@@ -1,100 +1,71 @@
 <template>
-  <v-layout justify-center align-center class="snakegame fill-height">
+  <v-layout
+    :style="layoutObject"
+    id="SnakeGame"
+    justify-center
+    align-center
+    class="snakegame fill-height"
+  >
     <v-container fluid class="pa-0">
       <!-- Instructions -->
-      <v-row>
-        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
-          <Instructions />
+      <v-row class>
+        <v-col cols="12" id="instructionsContainer" class="col-md-4">
+          <BaseCard
+            @hideShow="isMobile() ? moveUp($event) : ''"
+            :style="isMobile ? 'float: right' : ''"
+            :keepTitle="true"
+            :iconRight="isMobile() ? true : false"
+            :collapsible="true"
+            title="Controls"
+          >
+            <Instructions />
+          </BaseCard>
         </v-col>
-        <!-- Snake Game -->
-        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'" id="snakeCol">
-          <v-card class="pa-4 secondary lighten-2 absolute-center rounded-xl">
-            <v-layout column justify-center align-center>
-              <h3 style="margin-bottom: 20px;" class="primary--text">Current Score: {{score}}</h3>
-
-              <v-layout style="width: 200px; height: 200px" class="border">
-                <canvas width="200" height="200" id="canvas" />
-              </v-layout>
-
-              <v-layout class="mt-4" align-center justify-center>
-                <v-btn
-                  id="startBtn"
-                  v-if="this.controlMessage === 'Start'"
-                  v-text="this.controlMessage"
-                  @click="start()"
-                  class="primary secondary--text center"
-                ></v-btn>
-
-                <!-- <v-btn @click="SaveImg">Save Image</v-btn> -->
-              </v-layout>
-            </v-layout>
-          </v-card>
+        <!-- Snake Canvas -->
+        <v-col
+          class="col-md-4"
+          v-if="gameState == 'setup' || gameState === 'running'"
+          id="snakeCol"
+        >
+          <BaseCard>
+            <SnakeCanvas @startGame="start" />
+          </BaseCard>
+        </v-col>
+        <v-col class="col-md-4" v-if="gameState === 'end'" id="saveScore">
+          <BaseCard>
+            <SaveScore :score="score" />
+          </BaseCard>
         </v-col>
 
         <!-- ScoreBoard -->
-        <v-col v-if="gameState == 'END'">
-          <v-layout justify-center align-center>
-            <ScoreBoard
-              @updateScores="updateTopScores"
-              v-on:LoadGame="reset()"
-              v-bind:score="this.score"
-              :showSaveScore="this.showScores"
-              @HideSaveScores="something"
-              ref="scoreBoard"
-            />
-          </v-layout>
-        </v-col>
-
-        <!-- Top Scores -->
-        <v-col v-if="gameState === 'SETUP' || gameState === 'RUNNING'">
-          <v-card class="pa-0 secondary lighten-2 primary--text rounded-xl">
-            <v-layout column align-center justify-center class="primary--text">
-              <h2 style="margin-bottom: 20px" class="primary--text">Top 5</h2>
-
-              <div style="width: 100%" v-if="topFive.scores.length != 0" id="topScores">
-                <v-data-table
-                  id="topFiveTable"
-                  hide-default-footer
-                  disable-pagination
-                  style="color: red"
-                  disable-sort
-                  class="secondary lighten-2 primary--text"
-                  :headers="topFive.headers"
-                  :items="topFive.scores"
-                ></v-data-table>
-              </div>
-              <div v-else id="topScores" class="primary--text" style="padding: 0; width: 100%;">
-                <h2 style="margin-bottom: 20px" class="text-center">Loading Top Scores</h2>
-              </div>
-            </v-layout>
-          </v-card>
+        <v-col>
+          <BaseCard>
+            <ScoreBoard @updateScores="updateTopScores" v-on:LoadGame="reset()" />
+          </BaseCard>
         </v-col>
       </v-row>
     </v-container>
   </v-layout>
 </template>
 <script>
+/*eslint-disable */
+import BaseCard from "../../components/BaseCard";
+import SnakeCanvas from "./SnakeCanvas";
 import ScoreBoard from "./ScoreBoard";
 import Instructions from "./Instructions";
-import Axios from "axios";
+import SaveScore from "./SaveScore";
+
 export default {
   name: "Snake",
-  components: {
-    ScoreBoard,
-    Instructions,
+  created() {
+    this.$store.dispatch("getSnakeScores");
   },
-  mounted() {
-    const url = process.env.VUE_APP_API_URL + "/api/users";
-
-    Axios.get(url)
-      .then((res) => {
-        for (let index = 0; index < res.data.length; index++) {
-          res.data[index].index = index + 1;
-        }
-
-        this.topFive.scores = res.data.slice(0, 5);
-      })
-      .catch((err) => console.log(err));
+  components: {
+    Instructions,
+    BaseCard,
+    SnakeCanvas,
+    ScoreBoard,
+    SaveScore,
   },
   data() {
     return {
@@ -119,40 +90,23 @@ export default {
       dir: "right",
       score: 0,
       controlMessage: "Start",
-      gameState: "SETUP",
       xDown: null,
       yDown: null,
-      topFive: {
-        headers: [
-          {
-            align: "end",
-            text: "Rank",
-            value: "index",
-            width: 1,
-          },
-          {
-            text: "Name",
-            value: "username",
-            align: "center",
-          },
-          {
-            text: "Score",
-            value: "score",
-            align: "end",
-          },
-        ],
-        scores: [],
+      layoutObject: {
+        marginTop: "0",
       },
-      showScores: false,
     };
   },
-  state: {},
+  computed: {
+    gameState() {
+      return this.$store.state.SnakeGame.gameState;
+    },
+  },
   methods: {
-    // SaveImg() {
-    //   var canvas = document.getElementById("canvas");
-    //   var img = canvas.toDataURL("image/png");
-    //   document.write('<img src="' + img + '"/>');
-    // },
+    moveUp(hideShow) {
+      this.layoutObject.marginTop = hideShow ? "0px" : "-50px";
+    },
+    isMobile: mobileCheck,
     roundRect(context, x, y, width, height, radius, fill, stroke) {
       if (typeof stroke === "undefined") {
         stroke = true;
@@ -192,19 +146,21 @@ export default {
       }
     },
     updateTopScores(newScores) {
-      this.topFive.scores = newScores.slice(0, 5);
+      return (this.topFiveScores.scores = newScores.slice(0, 5));
     },
     start() {
       this.score = 0;
       // add event listener to listen for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
       // Mobile control listeners
-      document.addEventListener("touchstart", this.handleTouchStart, false);
-      document.addEventListener("touchmove", this.handleTouchMove, false);
+      this.$el.addEventListener("touchstart", this.handleTouchStart, false);
+      this.$el.addEventListener("touchmove", this.handleTouchMove, false);
 
       // disable Scroll for mobile
-      let app = document.getElementById("app");
-      app.style.touchAction = "none";
+      this.$emit("preventScroll");
+
+      // Scroll to element
+      this.$vuetify.goTo(this.$el);
 
       // find and setup canvas
       var canvas = this.$el.querySelector("canvas");
@@ -213,9 +169,14 @@ export default {
       this.canvas.width = this.width;
       this.canvas.height = this.height;
       this.controlMessage = "";
-      this.running = !this.running;
-      this.gameState = "RUNNING";
-      requestAnimationFrame(this.draw);
+      this.showInfo = false;
+
+      this.$store.commit("startGame");
+
+      // delay game start for screen to scroll to el
+      setTimeout(() => {
+        requestAnimationFrame(this.draw);
+      }, 1000);
     },
     getRandomGrid(max) {
       return (
@@ -228,14 +189,15 @@ export default {
         this.context,
         this.food.x + 2,
         this.food.y + 2,
-        this.scale - 2,
-        this.scale - 2,
+        this.scale - 4,
+        this.scale - 4,
         5,
         true,
         true
       );
     },
     updateSnake: function (x, y) {
+      // update snakes position (tail and body)
       for (let i = 0; i < this.snake.body.length - 1; i++) {
         this.snake.body[i] = this.snake.body[i + 1];
       }
@@ -250,8 +212,8 @@ export default {
           this.context,
           body.x + 2,
           body.y + 2,
-          this.scale - 2,
-          this.scale - 2,
+          this.scale - 4,
+          this.scale - 4,
           5,
           true,
           true
@@ -283,29 +245,18 @@ export default {
       }
     },
     draw() {
-      switch (this.gameState) {
-        case "RUNNING":
-          requestAnimationFrame(this.draw);
-          this.now = Date.now();
-          this.elapsed = this.now - this.then;
-          if (this.elapsed > 200) {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.then = this.now - (this.elapsed % this.fpsInterval);
-            this.moveSnake(this.dir);
-            this.death();
-            this.eat();
-            this.drawfood();
-          }
-          break;
-        case "SETUP":
-          this.context.fillStyle = this.fontColor;
-          this.context.font = "30px Comic Sans MS";
-          this.context.textAlign = "center";
-          this.context.fillText("Snake", this.width / 2, this.height / 2);
-          break;
-
-        default:
-          break;
+      if (this.gameState === "running") {
+        requestAnimationFrame(this.draw);
+      }
+      this.now = Date.now();
+      this.elapsed = this.now - this.then;
+      if (this.elapsed > 200) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.then = this.now - (this.elapsed % this.fpsInterval);
+        this.moveSnake(this.dir);
+        this.death();
+        this.eat();
+        this.drawfood();
       }
     },
     handleGlobalKeyDown(e) {
@@ -367,7 +318,7 @@ export default {
 
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-      this.gameState = "END";
+      this.$store.commit("endGame");
 
       // resetting game
       this.snake.body = [{ x: 0, y: 0 }];
@@ -383,7 +334,6 @@ export default {
         head.y < 0 ||
         head.y > this.height
       ) {
-        console.log("Outside Canvas");
         return true;
       }
       return false;
@@ -414,7 +364,7 @@ export default {
       }
     },
     reset() {
-      this.gameState = "SETUP";
+      this.$store.commit("resetGame");
     },
     getTouches(evt) {
       return evt.touches || evt.originalEvent.touches;
@@ -477,43 +427,11 @@ export default {
       this.yDown = null;
     },
     currentThemeColor() {
-      // TODO improvement only change when theme is changed
-      var elem = document.getElementById("app");
-      var c = getComputedStyle(elem).getPropertyValue("--v-primary-base");
-      this.snake.color = c;
-
-      var fc = getComputedStyle(elem).getPropertyValue("--v-accent-base");
-      this.food.color = fc;
+      this.snake.color = this.$vuetify.theme.currentTheme.primary;
+      this.food.color = this.$vuetify.theme.currentTheme.accent;
     },
   },
 };
 </script>
 <style lang="scss">
-#topFiveTable {
-  thead {
-    th {
-      color: var(--v-primary-base);
-    }
-  }
-  tr:hover {
-    background: transparent;
-    cursor: default;
-  }
-}
-#canvas {
-}
-.border {
-  border: 1px;
-  border-style: solid;
-  border-color: var(--v-primary-base);
-  width: fit-content;
-  height: fit-content;
-  // margin: 0 auto;
-}
-
-canvas {
-  // filter: invert(100%);
-  // mix-blend-mode: difference;
-  position: relative;
-}
 </style>
