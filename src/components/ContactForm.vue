@@ -19,13 +19,13 @@
           <BaseInput @change="email = $event" id="emailField" placeholder="Email" />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row style="width: 100%;">
         <v-fade-transition>
           <v-card-text class="pa-0" v-if="subjecterror" v-model="subjecterror">{{subjecterror}}</v-card-text>
         </v-fade-transition>
         <BaseInput @change="subject = $event" id="subjectField" placeholder="Subject" />
       </v-row>
-      <v-row>
+      <v-row style="width: 100%;">
         <v-col>
           <v-container class="pa-0">
             <v-fade-transition>
@@ -34,27 +34,20 @@
           </v-container>
         </v-col>
       </v-row>
-      <v-textarea
-        outlined
-        style="margin-bottom:100px; width: 80%;"
-        class="messageBox"
-        placeholder="Message"
-        auto-grow
-        v-model="message"
-      ></v-textarea>
-      <v-layout justify-center align-center>
-        <v-btn
-          style="top: -100px; width: 20px"
-          class="primary secondary--text"
-          @click="validateForm()"
-        >Send</v-btn>
-      </v-layout>
+      <v-row style="width: 100%;">
+        <v-textarea outlined class="messageBox" placeholder="Message" auto-grow v-model="message"></v-textarea>
+        <v-layout justify-center align-center>
+          <BaseButton @click="validateForm()">Send</BaseButton>
+          
+        </v-layout>
+      </v-row>
     </v-layout>
   </v-form>
 </template>
 
 <script>
 import BaseInput from "./BaseInput";
+import BaseButton from "./BaseButton";
 
 const axios = require("axios");
 const url = "http://" + process.env.VUE_APP_API_URL + "/email/send";
@@ -63,6 +56,7 @@ export default {
   name: "ContactForm",
   components: {
     BaseInput,
+    BaseButton,
   },
   methods: {
     validateForm() {

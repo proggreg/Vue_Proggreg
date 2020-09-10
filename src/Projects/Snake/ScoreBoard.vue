@@ -46,3 +46,28 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+#scoreTable {
+  thead {
+    th {
+      color: var(--v-secondary-base);
+    }
+    tr:hover {
+      background: none;
+    }
+  }
+  tbody {
+    tr:hover {
+      color: var(--v-primary-base);
+      opacity: 0.6;
+    }
+  }
+
+  .v-data-footer__select .v-select__selections .v-select__selection--comma {
+    color: var(--v-secondary-base);
+  }
+  .v-icon.v-icon {
+    color: var(--v-secondary-base);
+  }
+}
+</style>

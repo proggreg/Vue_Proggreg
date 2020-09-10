@@ -428,7 +428,7 @@ export default {
     },
     currentThemeColor() {
       this.snake.color = this.$vuetify.theme.currentTheme.primary;
-      this.food.color = this.$vuetify.theme.currentTheme.accent;
+      this.food.color = this.$vuetify.theme.currentTheme.secondary;
     },
   },
 };

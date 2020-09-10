@@ -48,7 +48,7 @@ const mutations = {
     endGame(state) {
         state.gameState = 'end'
     },
-    saveGame(state) {
+    restartGame(state) {
         state.gameState = 'setup'
     },
     setScores: (state, scores) => (state.scores.scores = scores)

@@ -14,24 +14,26 @@
         ></v-card-text>
       </v-fade-transition>
     </v-container>
-    <v-container style="width: 80%">
-      <BaseInput
-        style="text-align: center"
-        id="username_input"
-        @change="updateUsername"
-        placeholder="Name"
-      ></BaseInput>
+    <v-container>
+      <v-layout class="mt-4" align-center justify-center>
+        <BaseInput
+          style="text-align: center"
+          id="username_input"
+          @change="updateUsername"
+          placeholder="Name"
+        ></BaseInput>
+      </v-layout>
     </v-container>
-    <v-btn
-      @click.prevent="checkName"
-      id="saveBtn"
-      class="mr-4 secondary primary--text"
-      style="display: flex; margin: auto auto 0 auto !important; "
-    >Save</v-btn>
+    <v-layout column align-center justify-center>
+      <BaseButton @click="checkName">Save</BaseButton>
+
+      <BaseButton @click="restartGame" style="margin-top: 40px;">Play Again</BaseButton>
+    </v-layout>
   </v-form>
 </template>
 <script>
 import BaseInput from "../../components/BaseInput";
+import BaseButton from "../../components/BaseButton";
 
 const axios = require("axios");
 const Filter = require("bad-words"),
@@ -41,6 +43,7 @@ export default {
   name: "SaveScore",
   components: {
     BaseInput,
+    BaseButton,
   },
   data: () => ({
     username: "",
@@ -59,6 +62,9 @@ export default {
     });
   },
   methods: {
+    restartGame() {
+      this.$store.commit("restartGame");
+    },
     updateUsername(newUsername) {
       this.username = newUsername;
     },
@@ -66,12 +72,12 @@ export default {
       var data = { username: this.username, score: this.score };
       const url = process.env.VUE_APP_API_URL + "/api/users";
 
-      this.$store.commit("saveGame");
+      this.$store.commit("restartGame");
 
       axios
         .post(url, data)
         .then(() => {
-          this.$store.dispatch("getScores");
+          this.$store.dispatch("getSnakeScores");
         })
         .catch((err) => console.log(err));
     },

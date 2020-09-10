@@ -4,7 +4,7 @@
       <v-icon class="primary--text">{{tab.icon}}</v-icon>
       <v-card-text
         class="text--accent-3"
-        v-if="isMobile == false"
+        v-if="isMobile() == false"
         style="width:max-content"
       >{{tab.title}}</v-card-text>
     </v-tab>
@@ -35,7 +35,7 @@ export default {
           component: "/Contact",
         },
       ],
-      isMobile: mobileCheck(),
+      isMobile: mobileCheck,
     };
   },
 };

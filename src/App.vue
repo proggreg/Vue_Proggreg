@@ -6,7 +6,7 @@
       <v-container class="pa-0 v-textarea--auto-grow fill-height" fluid>
         <v-layout justify-center align-center class="pa-2">
           <v-card class="pa-6 secondary rounded-xl" id="contentContainer">
-            <v-btn class="primary secondary--text" v-if="tabCheck() == false" to="/Projects">Back</v-btn>
+            <BaseButton color="primary" to="/Projects" v-if="!tabCheck()">Back</BaseButton>
             <!-- content -->
             <router-view />
           </v-card>
@@ -18,10 +18,12 @@
 
 <script>
 import Header from "./components/Header";
+import BaseButton from "./components/BaseButton";
 
 export default {
   components: {
     Header,
+    BaseButton,
   },
   mounted() {
     this.$router.push("/Projects");
@@ -37,9 +39,6 @@ export default {
         return true;
       }
       return false;
-    },
-    preventScroll() {
-      console.log("prevent scroll");
     },
   },
 };

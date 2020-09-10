@@ -1,7 +1,11 @@
 <template>
-  <BaseCard class="full-width">
-    <ContactForm></ContactForm>
-  </BaseCard>
+  <v-layout justify-center>
+    <BaseCard style="width: 50%;">
+      <v-layout justify-center align-center>
+        <ContactForm></ContactForm>
+      </v-layout>
+    </BaseCard>
+  </v-layout>
 </template>
 
 <script>

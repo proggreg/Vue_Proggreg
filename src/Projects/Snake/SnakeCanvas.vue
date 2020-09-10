@@ -6,20 +6,18 @@
       </div>
     </v-layout>
     <v-layout class="mt-4" align-center justify-center>
-      <v-btn
-        id="startBtn"
-        v-if="this.controlMessage === 'Start'"
-        v-text="this.controlMessage"
-        @click="start()"
-        class="secondary primary--text center"
-      ></v-btn>
+      <BaseButton @click="start()" v-if="this.controlMessage === 'Start'">{{controlMessage}}</BaseButton>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import BaseButton from "../../components/BaseButton";
 export default {
   name: "SnakeCanvas",
+  components: {
+    BaseButton,
+  },
   data() {
     return {
       controlMessage: "Start",
