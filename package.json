@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve -m production",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "dev": "concurrently \"cd .. && cd proggreg-backend && npm run dev\" \"vue-cli-service serve\""
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@vue/cli-plugin-unit-jest": "^4.4.6",

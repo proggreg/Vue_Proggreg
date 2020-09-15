@@ -33,7 +33,9 @@ const actions = {
         commit
     }) {
         const response = await axios
-            .get(process.env.VUE_APP_API_URL + "/api/users")
+            .get("/api/users");
+
+        console.log(response);
         for (let index = 0; index < response.data.length; index++) {
             response.data[index].index = index + 1;
         }

@@ -1,7 +1,28 @@
 <template>
-  <v-card class="Header">
-    <v-toolbar color="secondary" extended elevation="20">
-      <v-layout justify-center>
+  <v-card class="Header secondary">
+    <v-container>
+      <v-row align="end" justify="end">
+        <BaseButton
+          v-for="theme in Themes"
+          :key="theme.name"
+          :color="theme.name"
+          @click="changeTheme(theme.color)"
+        ></BaseButton>
+      </v-row>
+      <v-row class="mb-4" align="center" justify="center">
+        <h1 class="primary--text" style="user-select: none;">Prog:greg</h1>
+      </v-row>
+
+      <v-row align="center" justify="center">
+        <Tabs />
+      </v-row>
+
+      <!-- <v-toolbar-items>
+        <v-btn>Test</v-btn>
+      </v-toolbar-items>-->
+      <template v-slot:extension></template>
+      <!-- 
+   <v-layout justify-center>
         <v-toolbar-title
           style="font-size: 2rem; user-select: none;"
           class="font-weight-bold absolute-center primary--text"
@@ -14,12 +35,8 @@
           :color="theme.name"
           @click="changeTheme(theme.color)"
         ></BaseButton>
-      </v-layout>
-      <!-- Tabs -->
-      <template v-slot:extension>
-        <Tabs />
-      </template>
-    </v-toolbar>
+      </v-layout>-->
+    </v-container>
   </v-card>
 </template>
 <script>

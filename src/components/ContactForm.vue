@@ -38,7 +38,6 @@
         <v-textarea outlined class="messageBox" placeholder="Message" auto-grow v-model="message"></v-textarea>
         <v-layout justify-center align-center>
           <BaseButton @click="validateForm()">Send</BaseButton>
-          
         </v-layout>
       </v-row>
     </v-layout>
@@ -50,7 +49,7 @@ import BaseInput from "./BaseInput";
 import BaseButton from "./BaseButton";
 
 const axios = require("axios");
-const url = "http://" + process.env.VUE_APP_API_URL + "/email/send";
+const url = "/email/send";
 
 export default {
   name: "ContactForm",

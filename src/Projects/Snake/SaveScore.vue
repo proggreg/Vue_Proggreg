@@ -70,7 +70,7 @@ export default {
     },
     sendData() {
       var data = { username: this.username, score: this.score };
-      const url = process.env.VUE_APP_API_URL + "/api/users";
+      const url = "//api/users";
 
       this.$store.commit("restartGame");
 

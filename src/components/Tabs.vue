@@ -1,21 +1,31 @@
 <template>
-  <v-tabs v-model="tabs.title" class="tabs" fixed-tabs>
-    <v-tab class="tab primary--text" :to="tab.component" :key="tab.title" v-for="tab in tabs">
+  <v-conainer>
+    <BaseButton class="ma-4" :to="tab.component" :key="tab.title" v-for="tab in tabs">{{tab.title}}</BaseButton>
+  </v-conainer>
+  <!-- <v-tabs v-model="tabs.title" class="tabs rounded-pill ma-4" fixed-tabs>
+    <v-tab
+      class="tab secondary primary--text rounded-pill"
+      icons-and-text="true"
+      :to="tab.component"
+      :key="tab.title"
+      v-for="tab in tabs"
+      style="border: none;"
+    >
+      {{tab.title}}
       <v-icon class="primary--text">{{tab.icon}}</v-icon>
-      <v-card-text
-        class="text--accent-3"
-        v-if="isMobile() == false"
-        style="width:max-content"
-      >{{tab.title}}</v-card-text>
     </v-tab>
-  </v-tabs>
+  </v-tabs>-->
 </template>
 <style scoped>
 </style>
 <script>
+import BaseButton from "./BaseButton";
 /* eslint-disable */
 export default {
   name: "Tabs",
+  components: {
+    BaseButton,
+  },
   data() {
     return {
       tabs: [
