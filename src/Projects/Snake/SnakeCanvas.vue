@@ -40,7 +40,7 @@ canvas {
 .border {
   border: 1px;
   border-style: solid;
-  border-color: var(--v-secondary-base);
+  border-color: var(--v-primary-base);
   width: fit-content;
   height: fit-content;
 }

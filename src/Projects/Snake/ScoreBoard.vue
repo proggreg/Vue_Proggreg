@@ -2,7 +2,7 @@
   <v-layout column justify-center align-center>
     <v-row v-if="scores.length !== 0">
       <v-col>
-        <h1 style="white-space: nowrap" class="text-center secondary--text">High Scores!</h1>
+        <h1 style="white-space: nowrap" class="text-center primary--text">High Scores!</h1>
       </v-col>
     </v-row>
 
@@ -10,13 +10,14 @@
       <v-col align-self="center">
         <v-layout align-center justify-center>
           <v-data-table
+            height="300px"
             :footer-props="{
             itemsPerPageOptions: [5]
             }
             "
             id="scoreTable"
             disable-sort
-            class="primary lighten-2 secondary--text"
+            class="topbar"
             :headers="scores.headers"
             :items="scores.scores"
             style="width: 90%;"

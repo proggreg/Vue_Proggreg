@@ -10,5 +10,6 @@ module.exports = {
       }
     }
   },
-  outputDir: path.resolve(__dirname, '../proggreg-backend/public')
+  outputDir: path.resolve(__dirname, '../proggreg-backend/public'),
+  assetsDir: ""
 };

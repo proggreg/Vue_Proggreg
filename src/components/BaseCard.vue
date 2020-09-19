@@ -1,18 +1,19 @@
 <template>
   <v-card
     :to="to"
-    class="primary lighten-2 rounded-xl"
+    class="rounded-xl topbar"
     :style="{width: cardWidth, height: cardHeight, padding: padding}"
   >
     <v-icon
       v-if="collapsible"
+      style="background: none;"
       :class="[hide ? 'showBtn' : 'hideBtn',iconRight ? 'right' : 'left']"
       @click="hideShow()"
     >{{plusMinusIcon}}</v-icon>
-    <v-layout justify-center>
+    <v-layout v-if="title != ''" justify-center>
       <v-card-title
         id="cardTitle"
-        class="secondary--text font-weight-bold pa-0"
+        class="primary--text font-weight-bold pa-0"
         v-if="!hide || keepTitle"
       >{{title}}</v-card-title>
     </v-layout>

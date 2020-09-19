@@ -1,7 +1,7 @@
 import "@mdi/font/css/materialdesignicons.css";
 import Vue from "vue";
 import Vuetify from "vuetify/lib";
-import Red from "./themes/Red";
+import Light from "./themes/Light";
 
 import {
   preset
@@ -17,7 +17,7 @@ export default new Vuetify({
   theme: {
     dark: false,
     themes: {
-      light: Red
+      light: Light
     },
     options: {
       customProperties: true,

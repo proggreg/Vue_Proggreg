@@ -1,20 +1,13 @@
 <template>
-  <v-conainer>
-    <BaseButton class="ma-4" :to="tab.component" :key="tab.title" v-for="tab in tabs">{{tab.title}}</BaseButton>
-  </v-conainer>
-  <!-- <v-tabs v-model="tabs.title" class="tabs rounded-pill ma-4" fixed-tabs>
-    <v-tab
-      class="tab secondary primary--text rounded-pill"
-      icons-and-text="true"
+  <div style="width: fit-content" class="pa-0 ma-0">
+    <BaseButton
+      style="padding: 1em 4em;"
+      class="ma-2"
       :to="tab.component"
       :key="tab.title"
       v-for="tab in tabs"
-      style="border: none;"
-    >
-      {{tab.title}}
-      <v-icon class="primary--text">{{tab.icon}}</v-icon>
-    </v-tab>
-  </v-tabs>-->
+    >{{tab.title}}</BaseButton>
+  </div>
 </template>
 <style scoped>
 </style>
@@ -32,7 +25,7 @@ export default {
         {
           title: "Projects",
           icon: "mdi-code-braces",
-          component: "Projects",
+          component: "/",
         },
         {
           title: "About Me",
@@ -51,11 +44,9 @@ export default {
 };
 </script>
 <style lang="scss">
-.tabs {
-  .tab {
-    @media screen and (max-width: 600px) {
-      width: 10px !important;
-    }
+.tab {
+  @media screen and (max-width: 600px) {
+    width: 10px !important;
   }
 }
 </style>

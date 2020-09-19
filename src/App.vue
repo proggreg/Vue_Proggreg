@@ -2,14 +2,12 @@
 <template >
   <v-app @preventScroll="preventScroll()" class="primary" id="app">
     <Header />
-    <v-main class="primary">
+    <v-main class="background">
       <v-container class="pa-0 v-textarea--auto-grow fill-height" fluid>
         <v-layout justify-center align-center class="pa-2">
-          <v-card class="pa-6 secondary rounded-xl" id="contentContainer">
-            <BaseButton color="primary" to="/Projects" v-if="!tabCheck()">Back</BaseButton>
-            <!-- content -->
-            <router-view />
-          </v-card>
+          <!-- content -->
+
+          <router-view />
         </v-layout>
       </v-container>
     </v-main>
@@ -18,15 +16,10 @@
 
 <script>
 import Header from "./components/Header";
-import BaseButton from "./components/BaseButton";
 
 export default {
   components: {
     Header,
-    BaseButton,
-  },
-  mounted() {
-    this.$router.push("/Projects");
   },
   methods: {
     // TODO could be improved to make check dynamic, possibly changed if routes are made nested

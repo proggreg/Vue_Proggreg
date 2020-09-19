@@ -2,7 +2,7 @@
   <v-form class="saveScoreForm" @submit.prevent>
     <v-card-text
       style="font-size:20px"
-      class="text-center font-weight-bold secondary--text"
+      class="text-center font-weight-bold primary--text"
       v-model="score"
     >Your Score: {{score}}</v-card-text>
     <v-container style="height: 20px">
@@ -26,7 +26,6 @@
     </v-container>
     <v-layout column align-center justify-center>
       <BaseButton @click="checkName">Save</BaseButton>
-
       <BaseButton @click="restartGame" style="margin-top: 40px;">Play Again</BaseButton>
     </v-layout>
   </v-form>
@@ -70,7 +69,7 @@ export default {
     },
     sendData() {
       var data = { username: this.username, score: this.score };
-      const url = "//api/users";
+      const url = "/api/users";
 
       this.$store.commit("restartGame");
 

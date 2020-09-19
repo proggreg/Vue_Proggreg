@@ -1,62 +1,43 @@
 <template>
-  <v-layout column v-if="complete">
+  <v-layout column class="primary--text">
     <h1 class="text-center">A little about me</h1>
-    <p>
-      My name is Greg Field, I am a Software Developer working at AuraQ in Malvern, UK.
-      <br />I have completed a BSc.in Audio & Music Technology at the University of the West of England in Bristol.
-      <br />I have also completed a MSc. in Computer Sceience at the University of Birmingham.
-      <br />
-    </p>
-    <h2 class="text-center">Techical Skills</h2>
+    <p>Hi I'm Greg Field</p>
 
-    <!-- TODO better names for Tech Skills -->
     <v-layout justify-center>
-      <v-list class="text-center" dense style="background:none">
-        <v-list-item v-for="skill in skills" :key="skill.title">
-          <v-list-item-title class="primary--text">
-            <b>{{skill.title}}:</b>
-            {{skill.skill}}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
+      <BaseButton @click="download($event)">Download CV</BaseButton>
     </v-layout>
-
-    <h2 class="text-center">Hobbies & Interests</h2>
-    <p>
-      I enjoy tech and music.
-      I am currently tinkering around with a Raspberry Pi and automating some of my devices using the Home Assistant OS.
-    </p>
-  </v-layout>
-  <v-layout align-center justify-center fill-height v-else>
-    <h1>In Progress</h1>
   </v-layout>
 </template>
 
 <script>
+import BaseButton from "./BaseButton";
+import axios from "axios";
+
 export default {
   name: "AboutMeContent",
-  data() {
-    return {
-      complete: false,
-      skills: [
-        {
-          title: "Languages",
-          skill: "Java, Javascript, Python",
-        },
-        {
-          title: "Database",
-          skill: "Postgres, MongoDB",
-        },
-        {
-          title: "Front-end",
-          skill: "Vue Js,HTML,CSS,SCSS",
-        },
-        {
-          title: "Project Mangemnt",
-          skill: "GIT, Trello",
-        },
-      ],
-    };
+  components: {
+    BaseButton,
+  },
+  methods: {
+    download(e) {
+      e.preventDefault();
+      axios
+        .get("/get-file/CV")
+        .then((res) => {
+          var fileURL = window.URL.createObjectURL(new Blob([res.data]));
+
+          var fileLink = document.createElement("a");
+
+          fileLink.href = fileURL;
+
+          fileLink.setAttribute("download", "GregFieldCV.pdf");
+
+          document.body.appendChild(fileLink);
+
+          fileLink.click();
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>

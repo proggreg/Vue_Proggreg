@@ -2,16 +2,21 @@
   "name": "proggreg",
   "version": "0.1.0",
   "private": true,
+
   "scripts": {
+    "start": "vue-cli-service serve --open",
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
     "@vue/cli-plugin-unit-jest": "^4.4.6",
     "axios": "^0.19.2",
     "bad-words": "^3.0.3",
+    "cache-loader": "^4.1.0",
     "core-js": "^3.6.4",
     "dotenv": "^8.2.0",
     "tone": "^13.8.25",
@@ -78,5 +83,6 @@
       "**/*.{js,vue}",
       "!**/node_modules/**"
     ]
-  }
+  },
+  "license": "MIT"
 }

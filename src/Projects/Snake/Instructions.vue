@@ -5,7 +5,7 @@
       <v-container v-if="isMobile">
         <v-card-text
           style="font-size: 1.2rem;"
-          class="secondary--text pa-2 text-center"
+          class="primary--text pa-2 text-center"
         >Swipe the screen in the direction you want to make the snake move.</v-card-text>
         <v-img src="@/assets/swipe.png"></v-img>
       </v-container>
@@ -14,7 +14,7 @@
       <v-container v-else>
         <v-card-text
           style="font-size: 1.2rem; text-align: center; margin-bottom: 20px;"
-          class="secondary--text text--center"
+          class="primary--text text--center"
         >Use arrow keys to move the snake.</v-card-text>
         <v-layout justify-center align-center>
           <v-img max-width="50%" src="@/assets/arrowkeys.png"></v-img>

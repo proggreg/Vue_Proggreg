@@ -1,6 +1,6 @@
 <template>
-  <v-layout justify-center>
-    <BaseCard width="50%;">
+  <v-layout justify-center align-center>
+    <BaseCard style="width: fit-content;">
       <v-layout justify-center align-center>
         <ContactForm></ContactForm>
       </v-layout>

@@ -1,49 +1,40 @@
 <template>
-  <v-card class="Header secondary">
-    <v-container>
-      <v-row align="end" justify="end">
-        <BaseButton
-          v-for="theme in Themes"
-          :key="theme.name"
-          :color="theme.name"
-          @click="changeTheme(theme.color)"
-        ></BaseButton>
-      </v-row>
-      <v-row class="mb-4" align="center" justify="center">
-        <h1 class="primary--text" style="user-select: none;">Prog:greg</h1>
-      </v-row>
+  <v-card class="topbar secondary primary--text">
+    <v-row>
+      <v-col justify-center>
+        <!-- Show Current Weather -->
+        <Weather></Weather>
+      </v-col>
+      <v-col justify-end>
+        <v-row justify-end>
+          <!-- Choose Theme -->
+          <h3 style="margin-right: 20px;">Pick a theme</h3>
+          <BaseButton
+            v-for="theme in Themes"
+            :key="theme.name"
+            :color="theme.name"
+            @click="changeTheme(theme.color)"
+          ></BaseButton>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row class="mb-4" align="center" justify="center">
+      <h1 style="user-select: none;">Prog:greg</h1>
+    </v-row>
 
-      <v-row align="center" justify="center">
-        <Tabs />
-      </v-row>
-
-      <!-- <v-toolbar-items>
-        <v-btn>Test</v-btn>
-      </v-toolbar-items>-->
-      <template v-slot:extension></template>
-      <!-- 
-   <v-layout justify-center>
-        <v-toolbar-title
-          style="font-size: 2rem; user-select: none;"
-          class="font-weight-bold absolute-center primary--text"
-        >Prog:greg</v-toolbar-title>
-      </v-layout>
-      <v-layout style="right: 20px ;position: absolute;">
-        <BaseButton
-          v-for="theme in Themes"
-          :key="theme.name"
-          :color="theme.name"
-          @click="changeTheme(theme.color)"
-        ></BaseButton>
-      </v-layout>-->
-    </v-container>
+    <v-row align="center" justify="center">
+      <Tabs />
+    </v-row>
   </v-card>
 </template>
 <script>
 /*eslint-disable*/
 import BaseButton from "./BaseButton";
 import Tabs from "./Tabs";
+import Weather from "./Weather";
 
+import LightTheme from "../plugins/themes/Light";
+import DarkTheme from "../plugins/themes/Dark";
 import BlueTheme from "../plugins/themes/Blue";
 import RedTheme from "../plugins/themes/Red";
 import OrangeTheme from "../plugins/themes/Orange";
@@ -55,6 +46,7 @@ export default {
   components: {
     Tabs,
     BaseButton,
+    Weather,
   },
   created() {
     let cachedTheme = JSON.parse(localStorage.getItem("CurrentTheme"));
@@ -70,6 +62,8 @@ export default {
   },
   data: () => ({
     Themes: [
+      { color: LightTheme, name: "white" },
+      { color: DarkTheme, name: "black" },
       { color: RedTheme, name: "red" },
       { color: BlueTheme, name: "blue" },
       { color: OrangeTheme, name: "orange" },

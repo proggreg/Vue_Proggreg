@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="rounded-pill" :color="color" @click="click" :to="to">
+  <v-btn class="rounded-pill primary--text" :color="color" @click="click" :to="to">
     <slot></slot>
   </v-btn>
 </template>
@@ -10,15 +10,15 @@ export default {
   props: {
     color: {
       type: String,
-      default: "primary",
+      default: "secondary",
     },
     to: {
       type: String,
     },
   },
   methods: {
-    click() {
-      this.$emit("click");
+    click(e) {
+      this.$emit("click", e);
     },
   },
 };

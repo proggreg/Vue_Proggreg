@@ -1,7 +1,9 @@
 <template>
-  <BaseCard>
-    <AboutMeContent></AboutMeContent>
-  </BaseCard>
+  <v-layout justify-center align-center>
+    <BaseCard style="width:fit-content; height: 90%;">
+      <AboutMeContent></AboutMeContent>
+    </BaseCard>
+  </v-layout>
 </template>
 
 <script>

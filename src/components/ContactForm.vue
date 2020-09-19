@@ -3,43 +3,25 @@
     <v-layout column class justify-center align-center>
       <v-row>
         <v-col>
-          <v-container class="pa-0" fluid>
-            <v-fade-transition>
-              <v-card-text class="pa-0" v-if="nameerror" v-model="nameerror">{{nameerror}}</v-card-text>
-            </v-fade-transition>
-          </v-container>
-          <BaseInput @change="name = $event" id="nameField" placeholder="Name" />
+          <BaseValidationMessage :message="nameerror" />
+          <BaseInput v-model="name" placeholder="Name" />
         </v-col>
         <v-col>
-          <v-container class="pa-0">
-            <v-fade-transition>
-              <v-card-text class="pa-0" v-if="emailerror" v-model="emailerror">{{emailerror}}</v-card-text>
-            </v-fade-transition>
-          </v-container>
-          <BaseInput @change="email = $event" id="emailField" placeholder="Email" />
+          <BaseValidationMessage :message="emailerror" />
+          <BaseInput v-model="email" placeholder="Email" />
         </v-col>
       </v-row>
-      <v-row style="width: 100%;">
-        <v-fade-transition>
-          <v-card-text class="pa-0" v-if="subjecterror" v-model="subjecterror">{{subjecterror}}</v-card-text>
-        </v-fade-transition>
-        <BaseInput @change="subject = $event" id="subjectField" placeholder="Subject" />
-      </v-row>
-      <v-row style="width: 100%;">
-        <v-col>
-          <v-container class="pa-0">
-            <v-fade-transition>
-              <v-card-text class="pa-0" v-if="messageerror" v-model="messageerror">{{messageerror}}</v-card-text>
-            </v-fade-transition>
-          </v-container>
-        </v-col>
-      </v-row>
-      <v-row style="width: 100%;">
-        <v-textarea outlined class="messageBox" placeholder="Message" auto-grow v-model="message"></v-textarea>
-        <v-layout justify-center align-center>
-          <BaseButton @click="validateForm()">Send</BaseButton>
-        </v-layout>
-      </v-row>
+      <BaseValidationMessage :message="subjecterror" />
+      <BaseInput v-model="subject" id="subjectField" placeholder="Subject" />
+      <BaseValidationMessage :message="messageerror" />
+      <v-textarea outlined class="messageBox" placeholder="Message" auto-grow v-model="message"></v-textarea>
+      <v-layout justify-center align-center>
+        <BaseButton @click="validateForm()">Send</BaseButton>
+      </v-layout>
+      <BaseSnackBar
+        :show="this.$store.state.Contact.sent"
+        message="Thanks for your message! I'll get back to you soon. 👍 😀"
+      ></BaseSnackBar>
     </v-layout>
   </v-form>
 </template>
@@ -47,17 +29,21 @@
 <script>
 import BaseInput from "./BaseInput";
 import BaseButton from "./BaseButton";
-
-const axios = require("axios");
-const url = "/email/send";
+import BaseValidationMessage from "./BaseValidationMessage";
+import BaseSnackBar from "./BaseSnackbar";
 
 export default {
   name: "ContactForm",
   components: {
     BaseInput,
     BaseButton,
+    BaseValidationMessage,
+    BaseSnackBar,
   },
   methods: {
+    test(e) {
+      console.log(e);
+    },
     validateForm() {
       let valid = true;
       if (!this.name) {
@@ -70,7 +56,16 @@ export default {
         this.emailerror = "Email is required";
         valid = false;
       } else {
-        this.emailerror = "";
+        if (
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+            this.email
+          )
+        ) {
+          this.emailerror = "";
+        } else {
+          this.emailerror = "Invalid Email";
+          valid = false;
+        }
       }
       if (!this.subject) {
         this.subjecterror = "Subject is required";
@@ -91,31 +86,52 @@ export default {
       }
     },
     sendMail() {
-      let emailOptions = {
-        subject: this.subject,
-        msg: this.message,
-        from: this.name,
-        email: this.email,
-      };
-      axios
-        .post(url, emailOptions)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
+      this.$store.dispatch("sendEmail");
     },
   },
   data() {
     return {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
+      snackBar: false,
+      // name: this.name,
       nameerror: "",
       messageerror: "",
       subjecterror: "",
       emailerror: "",
     };
+  },
+  computed: {
+    name: {
+      get() {
+        return this.$store.state.Contact.contactInfo.name;
+      },
+      set(value) {
+        this.$store.commit("updateName", value);
+      },
+    },
+    email: {
+      get() {
+        return this.$store.state.Contact.contactInfo.email;
+      },
+      set(value) {
+        this.$store.commit("updateEmail", value);
+      },
+    },
+    subject: {
+      get() {
+        return this.$store.state.Contact.contactInfo.subject;
+      },
+      set(value) {
+        this.$store.commit("updateSubject", value);
+      },
+    },
+    message: {
+      get() {
+        return this.$store.state.Contact.contactInfo.message;
+      },
+      set(value) {
+        this.$store.commit("updateMessage", value);
+      },
+    },
   },
 };
 </script>
@@ -149,18 +165,18 @@ export default {
 
   .messageBox {
     textarea {
-      color: var(--v-secondary-base);
+      color: var(--v-primary-base);
     }
   }
 
   input::placeholder {
     opacity: 0.8;
-    color: var(--v-secondary-base);
+    color: var(--v-primary-base);
   }
 
   textarea::placeholder {
     opacity: 0.8;
-    color: var(--v-secondary-base);
+    color: var(--v-primary-base);
   }
 }
 </style>

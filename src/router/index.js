@@ -1,19 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import ProjectsGrid from "../components/ProjectsGrid.vue";
+
 Vue.use(VueRouter);
 
 const routes = [{
     path: "/",
-    name: "Home"
-  },
-  {
-    path: '/Projects',
-    name: "Projects",
-    component: () =>
-      import(
-        /* webpackChunkName: "projectsgrid" */
-        "../components/ProjectsGrid.vue"
-      ),
+    name: "Home",
+    component: ProjectsGrid
   },
   {
     path: "/AboutMe",

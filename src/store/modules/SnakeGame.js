@@ -32,27 +32,19 @@ const actions = {
     async getSnakeScores({
         commit
     }) {
-        const response = await axios
-            .get("/api/users");
+        const response = await axios.get("/api/users");
 
-        console.log(response);
-        for (let index = 0; index < response.data.length; index++) {
-            response.data[index].index = index + 1;
+        for (let index = 1; index < response.data.length - 1; index++) {
+            response.data[index].index = index;
         }
         commit('setScores', response.data)
     }
 }
 
 const mutations = {
-    startGame(state) {
-        state.gameState = 'running'
-    },
-    endGame(state) {
-        state.gameState = 'end'
-    },
-    restartGame(state) {
-        state.gameState = 'setup'
-    },
+    startGame: state => state.gameState = 'running',
+    endGame: state => state.gameState = 'end',
+    restartGame: state => state.gameState = 'setup',
     setScores: (state, scores) => (state.scores.scores = scores)
 }
 

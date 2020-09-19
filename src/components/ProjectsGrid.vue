@@ -3,18 +3,20 @@
   <v-container class="projectsGrid">
     <v-layout wrap align-center justify-center>
       <v-col cols="auto" align-self="center" v-for="project in projects" :key="project.title">
-        <BaseCard class="primary" hover outlined ripple :to="project.href">
-          <v-card-title class="secondary--text" v-text="project.title"></v-card-title>
-          <v-row>
-            <v-img
-              contain
-              class="align-center justify-center"
-              width="200"
-              height="200"
-              :src="project.img"
-            ></v-img>
-          </v-row>
-        </BaseCard>
+        <v-hover>
+          <BaseCard class="primary" hover outlined ripple :to="project.href">
+            <v-card-title class="primary--text" v-text="project.title"></v-card-title>
+            <v-row>
+              <v-img
+                contain
+                class="align-center justify-center"
+                width="200"
+                height="200"
+                :src="project.img"
+              ></v-img>
+            </v-row>
+          </BaseCard>
+        </v-hover>
       </v-col>
     </v-layout>
   </v-container>
