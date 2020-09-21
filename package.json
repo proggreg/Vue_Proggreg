@@ -7,7 +7,7 @@
     "start": "vue-cli-service serve --open",
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "test": "vue-cli-service test:unit",
+    "test": "vue-cli-service test:unit --setupTestFrameworkScriptFile=./tests/setup.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -69,20 +69,5 @@
     "last 2 versions",
     "not dead"
   ],
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      ".*\\.(vue)$": "vue-jest"
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/*.{js,vue}",
-      "!**/node_modules/**"
-    ]
-  },
   "license": "MIT"
 }

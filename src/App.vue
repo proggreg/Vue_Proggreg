@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template >
   <v-app @preventScroll="preventScroll()" class="primary" id="app">
-    <Header />
+    <Header title="Prog:greg" />
     <v-main class="background">
       <v-container class="pa-0 v-textarea--auto-grow fill-height" fluid>
         <v-layout justify-center align-center class="pa-2">

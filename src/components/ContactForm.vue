@@ -41,9 +41,6 @@ export default {
     BaseSnackBar,
   },
   methods: {
-    test(e) {
-      console.log(e);
-    },
     validateForm() {
       let valid = true;
       if (!this.name) {
@@ -92,7 +89,6 @@ export default {
   data() {
     return {
       snackBar: false,
-      // name: this.name,
       nameerror: "",
       messageerror: "",
       subjecterror: "",
