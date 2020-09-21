@@ -8,8 +8,8 @@ The backend can be found <a href="https://github.com/proggreg/proggreg-backend">
 
 ## Built With
 ### Dependencies
-| Name| Description | |
-|--|--|:--:| 
+| Name| Description | 
+|--|--|
 |[vue]|Progressive JavaScript Framework
 |[vue-cli-3]|️Standard Tooling for Vue.js Development
 |[vue-router]|Official Router for Vue.js
