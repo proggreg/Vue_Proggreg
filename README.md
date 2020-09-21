@@ -11,7 +11,7 @@ The backend can be found <a href="https://github.com/proggreg/proggreg-backend">
 | Name| Description | 
 |--|--|
 |[vue]|Progressive JavaScript Framework
-|[vue-cli-3]|️Standard Tooling for Vue.js Development
+|[vue-cli-2]|️Standard Tooling for Vue.js Development
 |[vue-router]|Official Router for Vue.js
 |[vuex]|️Centralized State Management for Vue.js
 |[vuetify]|️Material Component Framework for Vue.js
