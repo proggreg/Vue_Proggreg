@@ -18,7 +18,7 @@ The backend can be found <a href="https://github.com/proggreg/proggreg-backend">
 
 [vue]: https://vuejs.org
 [vue-router]: https://router.vuejs.org
-[vue-cli-3]: https://cli.vuejs.org
+[vue-cli-2]: https://cli.vuejs.org
 [vuex]: https://vuex.vuejs.org
 [vuetify]: https://vuetifyjs.com
 
