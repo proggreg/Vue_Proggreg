@@ -26,9 +26,6 @@
 <script>
 export default {
   name: "Instructions",
-  created() {
-    console.log(this.is_touch_enabled());
-  },
   methods: {
     isTouchEnabled() {
       return (
