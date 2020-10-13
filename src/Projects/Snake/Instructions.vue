@@ -1,7 +1,7 @@
 <template>
   <v-container column class="text-center">
     <!-- Mobile -->
-    <div v-if="isTouchEnabled">
+    <div v-if="isTouchEnabled()">
       <v-card-text class="primary--text" style="font-size: 100%"
         >Swipe the screen to make the snake move.</v-card-text
       >
