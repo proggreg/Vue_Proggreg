@@ -1,48 +1,51 @@
 <template>
   <v-layout column class="primary--text">
     <h1 class="text-center">A little about me</h1>
-    <p>Hi I'm Greg Field</p>
-
+    <p>Hi I'm Greg Field 👋</p>
+    <p>
+      I made this website to learn about Web development and also as a home to
+      share some projects.
+    </p>
+    <p>
+      There may not be many at the moment but I'm hoping there will be more
+      soon.
+    </p>
     <v-layout justify-center>
-      <BaseButton @click="download($event)">Download CV</BaseButton>
+      <BaseButton @click="downloadCV($event)">Download my CV</BaseButton>
     </v-layout>
+    <BaseSnackbar :show="messageSent" :message="message"></BaseSnackbar>
   </v-layout>
 </template>
 
 <script>
 import BaseButton from "./BaseButton";
-import axios from "axios";
+import BaseSnackbar from "./BaseSnackbar";
 
 export default {
   name: "AboutMeContent",
   components: {
     BaseButton,
+    BaseSnackbar,
   },
   methods: {
-    download(e) {
+    async downloadCV(e) {
       e.preventDefault();
-      axios
-        .get("/get-file/CV")
-        .then((res) => {
-          var fileURL = window.URL.createObjectURL(new Blob([res.data]));
-
-          var fileLink = document.createElement("a");
-
-          fileLink.href = fileURL;
-
-          fileLink.setAttribute("download", "GregFieldCV.pdf");
-
-          document.body.appendChild(fileLink);
-
-          fileLink.click();
-        })
-        .catch((err) => console.log(err));
+      let link = await this.$store.dispatch("getCV");
+      link.click();
+      this.messageSent = true;
+      this.message = "Thanks! 😀 Hope to speak to you soon";
     },
+  },
+  data() {
+    return {
+      message: "",
+      messageSent: false,
+    };
   },
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 #aboutMeCard {
   margin: 1% 20%;
 }

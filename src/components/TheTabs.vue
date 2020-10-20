@@ -7,9 +7,9 @@
       icons-and-text
       grow
     >
-      <v-tab :href="tab.component">
+      <v-tab class="topbar primary--text" :to="tab.component">
         {{ tab.title }}
-        <v-icon>{{ tab.icon }}</v-icon>
+        <v-icon class="primary--text">{{ tab.icon }}</v-icon>
       </v-tab>
     </v-tabs>
   </v-card>
@@ -41,8 +41,8 @@ export default {
 };
 </script>
 
-<style >
-.v-tabs-slider-wrapper {
+<style scoped lang="scss" >
+::v-deep .v-tabs-slider-wrapper {
   display: none;
 }
 </style>

@@ -1,13 +1,16 @@
 import {
-    shallowMount
+    shallowMount,
+    createLocalVue
 } from "@vue/test-utils";
-import Header from '@/components/Header.vue'
+import Header from '@/components/TheHeader.vue'
+
+const localVue = createLocalVue();
 
 describe("no title given", () => {
     it("renders props.msg when passed", () => {
-        const title = "new message";
+
         const wrapper = shallowMount(Header, {});
-        expect(wrapper.text()).toMatch(title);
+        expect(wrapper.text()).toBe("");
     });
 });
 
@@ -20,5 +23,27 @@ describe("correct title given", () => {
             }
         });
         expect(wrapper.text()).toMatch(title);
+    });
+});
+
+describe("title is rendered", () => {
+    it("renders title", () => {
+        const wrapper = shallowMount(Header, {
+            localVue,
+        });
+        expect(wrapper.find('h1').exists()).toBe(true);
+    });
+});
+
+describe("title is rendered", () => {
+    it("renders title", () => {
+        const title = "Prog:greg";
+        const wrapper = shallowMount(Header, {
+            localVue,
+            propsData: {
+                title
+            }
+        });
+        expect(wrapper.find('h1').text()).toMatch("Prog:greg");
     });
 });

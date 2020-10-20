@@ -1,6 +1,7 @@
 <template>
   <v-text-field
-    class="primary--text"
+    content-class="primary--text"
+    input=""
     @input="onInput"
     :value="value"
     :placeholder="placeholder"
@@ -37,21 +38,19 @@ export default {
 };
 </script>
 
-<style lang="scss" >
-.v-text-field--outlined fieldset {
-  border-color: var(--v-primary-base);
-  border-width: 2px;
-}
+<style scoped lang="scss">
 
-.v-text-field {
+::v-deep .v-input__control {
   input {
-    color: var(--v-primary-base) !important;
+    color: var(--v-primary-base);
   }
-}
-
-.v-text-field::placeholder {
-  input {
-    color: var(--v-primary-base) !important;
+   input::placeholder {
+    color: var(--v-primary-base);
+    
+  }
+  fieldset {
+    border-color: var(--v-primary-base);
+    border-width: 2px;
   }
 }
 </style>

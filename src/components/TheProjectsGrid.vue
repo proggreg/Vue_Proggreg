@@ -2,10 +2,18 @@
 <template>
   <v-container class="projectsGrid">
     <v-layout wrap align-center justify-center>
-      <v-col cols="auto" align-self="center" v-for="project in projects" :key="project.title">
+      <v-col
+        cols="auto"
+        align-self="center"
+        v-for="project in projects"
+        :key="project.title"
+      >
         <v-hover>
           <BaseCard class="primary" hover outlined ripple :to="project.href">
-            <v-card-title class="primary--text" v-text="project.title"></v-card-title>
+            <v-card-title
+              class="primary--text"
+              v-text="project.title"
+            ></v-card-title>
             <v-row>
               <v-img
                 contain
@@ -40,7 +48,7 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .projectsGrid {
   .card {
     .projectTitle {

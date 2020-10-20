@@ -1,10 +1,22 @@
 
 <template>
-  <!-- /* eslint-disable vue/no-use-v-if-with-v-for */ -->
   <div id="synthContainer">
-    <h1 class="text-center" style="width: max-content; margin: 0 auto">Synth</h1>
-    <div @click.capture="play" id="whiteKey" :key="i.note" v-for="i in notes"></div>
-    <div :style="i.style" @click="play" id="blackKey" :key="i" v-for="i in sharpflats"></div>
+    <h1 class="text-center" style="width: max-content; margin: 0 auto">
+      Synth
+    </h1>
+    <div
+      @click.capture="play"
+      id="whiteKey"
+      :key="i.note"
+      v-for="i in notes"
+    ></div>
+    <div
+      :style="i.style"
+      @click="play"
+      id="blackKey"
+      :key="i"
+      v-for="i in sharpflats"
+    ></div>
     <v-btn style="margin: 0 auto" v-on:click.native="play">Click</v-btn>
   </div>
 </template>
@@ -48,7 +60,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 #synthContainer {
   display: flex;
   #whiteKey {

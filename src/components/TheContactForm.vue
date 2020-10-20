@@ -3,18 +3,23 @@
     <v-layout column class justify-center align-center>
       <v-row>
         <v-col>
-          <BaseValidationMessage :message="nameerror" />
+          <BaseValidationMessage :message="nameError" />
           <BaseInput v-model="name" placeholder="Name" />
         </v-col>
         <v-col>
-          <BaseValidationMessage :message="emailerror" />
+          <BaseValidationMessage :message="emailError" />
           <BaseInput v-model="email" placeholder="Email" />
         </v-col>
       </v-row>
-      <BaseValidationMessage :message="subjecterror" />
-      <BaseInput v-model="subject" id="subjectField" placeholder="Subject" />
-      <BaseValidationMessage :message="messageerror" />
-      <v-textarea outlined class="messageBox" placeholder="Message" auto-grow v-model="message"></v-textarea>
+      <v-row style="width: 100%">
+        <BaseValidationMessage :message="subjectError" />
+        <BaseInput v-model="subject" id="subjectField" placeholder="Subject" />
+      </v-row>
+      <v-row style="width: 100%">
+        <BaseValidationMessage :message="messageError" />
+        <BaseTextArea v-model="message" id="messageBox" placeholder="Message">
+        </BaseTextArea>
+      </v-row>
       <v-layout justify-center align-center>
         <BaseButton @click="validateForm()">Send</BaseButton>
       </v-layout>
@@ -28,14 +33,16 @@
 
 <script>
 import BaseInput from "./BaseInput";
+import BaseTextArea from "./BaseTextArea";
 import BaseButton from "./BaseButton";
 import BaseValidationMessage from "./BaseValidationMessage";
 import BaseSnackBar from "./BaseSnackbar";
 
 export default {
-  name: "ContactForm",
+  name: "TheContactForm",
   components: {
     BaseInput,
+    BaseTextArea,
     BaseButton,
     BaseValidationMessage,
     BaseSnackBar,
@@ -44,13 +51,13 @@ export default {
     validateForm() {
       let valid = true;
       if (!this.name) {
-        this.nameerror = "Name is required";
+        this.nameError = "Name is required";
         valid = false;
       } else {
-        this.nameerror = "";
+        this.nameError = "";
       }
       if (!this.email) {
-        this.emailerror = "Email is required";
+        this.emailError = "Email is required";
         valid = false;
       } else {
         if (
@@ -58,23 +65,23 @@ export default {
             this.email
           )
         ) {
-          this.emailerror = "";
+          this.emailError = "";
         } else {
-          this.emailerror = "Invalid Email";
+          this.emailError = "Incorrect email format";
           valid = false;
         }
       }
       if (!this.subject) {
-        this.subjecterror = "Subject is required";
+        this.subjectError = "Subject is required";
         valid = false;
       } else {
-        this.subjecterror = "";
+        this.subjectError = "";
       }
       if (!this.message) {
-        this.messageerror = "Message is required";
+        this.messageError = "Message is required";
         valid = false;
       } else {
-        this.messageerror = "";
+        this.messageError = "";
       }
       if (!valid) {
         return;
@@ -89,10 +96,10 @@ export default {
   data() {
     return {
       snackBar: false,
-      nameerror: "",
-      messageerror: "",
-      subjecterror: "",
-      emailerror: "",
+      nameError: "",
+      messageError: "",
+      subjectError: "",
+      emailError: "",
     };
   },
   computed: {
@@ -131,10 +138,7 @@ export default {
   },
 };
 </script>
-
-// TODO Add cache so form information is stored in local storage, this should prevent information being lost when tab switching
-
-<style lang="scss">
+<style scoped lang="scss">
 #contactForm {
   .v-input {
     width: 100%;
@@ -149,11 +153,7 @@ export default {
     margin: 0;
   }
 }
-.container {
-  .v-text-field > .v-input__control > .v-input__slot::before {
-    border-color: var(--v-primary-base);
-  }
-}
+
 #contactForm {
   @media screen and (max-width: 1000px) {
     width: 100%;

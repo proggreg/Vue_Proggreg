@@ -1,13 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import ProjectsGrid from "../components/ProjectsGrid.vue";
+import TheProjectsGrid from "../components/TheProjectsGrid.vue";
 
 Vue.use(VueRouter);
 
 const routes = [{
     path: "/",
     name: "Home",
-    component: ProjectsGrid
+    component: TheProjectsGrid
   },
   {
     path: "/AboutMe",
@@ -36,15 +36,7 @@ const routes = [{
         "../Projects/Snake/SnakeGame.vue"
       ),
   },
-  {
-    path: "/TwitterBot",
-    name: "TwitterBot",
-    component: () =>
-      import(
-        /* webpackChunkName: "twitterbot" */
-        "../Projects/TwitterBot/TwitterBot.vue"
-      ),
-  }, {
+ {
     path: "/Synth",
     name: "Synth",
     component: () =>

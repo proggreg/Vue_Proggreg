@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center align-center>
-    <BaseCard style="width: fit-content;">
+    <BaseCard style="width: fit-content">
       <v-layout justify-center align-center>
         <ContactForm></ContactForm>
       </v-layout>
@@ -10,20 +10,14 @@
 
 <script>
 import BaseCard from "../components/BaseCard";
-import ContactForm from "../components/ContactForm.vue";
+import ContactForm from "../components/TheContactForm.vue";
 export default {
   name: "ContactView",
   components: {
     BaseCard,
     ContactForm,
   },
-  data() {
-    return {
-      form: ContactForm,
-    };
-  },
 };
 </script>
-
-<style>
+<style scoped lang="scss">
 </style>

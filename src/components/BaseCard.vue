@@ -2,24 +2,28 @@
   <v-card
     :to="to"
     class="rounded-xl topbar"
-    :style="{width: cardWidth, height: cardHeight, padding: padding}"
+    :style="{ width: cardWidth, height: cardHeight, padding: padding }"
   >
-    <v-icon
-      v-if="collapsible"
-      style="background: none;"
-      :class="[hide ? 'showBtn' : 'hideBtn',iconRight ? 'right' : 'left']"
-      @click="hideShow()"
-    >{{plusMinusIcon}}</v-icon>
-    <v-layout v-if="title != ''" justify-center>
+
+    <v-layout class="pa-0 ma-0 fill-height" column justify-center align-center>
       <v-card-title
         id="cardTitle"
-        class="primary--text font-weight-bold pa-0"
+        style="font-size: 2em; user-select: none"
+        class="primary--text text-center font-weight-bold pa-0"
         v-if="!hide || keepTitle"
-      >{{title}}</v-card-title>
-    </v-layout>
-    <v-layout v-if="!hide" justify-center align-center>
-      <!-- component injected here -->
-      <slot></slot>
+        >{{ title }}</v-card-title
+      >
+
+      <v-layout
+        class="fill-height"
+        style="min-width: 100%"
+        v-if="!hide"
+        justify-center
+        align-center
+      >
+        <!-- component injected here -->
+        <slot />
+      </v-layout>
     </v-layout>
   </v-card>
 </template>
@@ -27,7 +31,16 @@
 <script>
 export default {
   name: "BaseCard",
-  props: ["title", "collapsible", "keepTitle", "iconRight", "to"],
+  props: {
+    title: {
+      type: String,
+    },
+    to: {
+      type: String,
+    },
+  },
+
+
   methods: {
     hideShow: function () {
       this.$emit("hideShow", this.hide);

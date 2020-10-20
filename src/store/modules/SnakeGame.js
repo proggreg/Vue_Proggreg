@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const state = {
     gameState: 'setup',
+    playerName: '',
+    currentScore: 0,
     scores: {
         headers: [{
                 align: "start",
@@ -25,7 +27,8 @@ const state = {
 }
 
 const getters = {
-    getScores: state => state.scores
+    getScores: state => state.scores,
+    getPlayerName: state => state.playerName
 }
 
 const actions = {
@@ -33,19 +36,34 @@ const actions = {
         commit
     }) {
         const response = await axios.get("/api/users");
+        let scores = response.data;
+        let rank = 1;
 
-        for (let index = 1; index < response.data.length - 1; index++) {
-            response.data[index].index = index;
+        scores[0].index = 1;
+
+        for (let index = 1; index < scores.length; index++) {
+            if (scores[index - 1].score === scores[index].score) {
+                scores[index].index = scores[index - 1].index;
+            } else {
+                scores[index].index = rank + 1;
+                rank++;
+            }
         }
-        commit('setScores', response.data)
+        commit('setScores', scores)
+    },
+    async endGame({
+        commit
+    }, score) {
+        commit('updateScore', score);
+        commit('updateGameState', 'end');
     }
 }
 
 const mutations = {
-    startGame: state => state.gameState = 'running',
-    endGame: state => state.gameState = 'end',
-    restartGame: state => state.gameState = 'setup',
-    setScores: (state, scores) => (state.scores.scores = scores)
+    updateGameState: (state, newGameState) => state.gameState = newGameState,
+    setScores: (state, scores) => state.scores.scores = scores,
+    updatePlayerName: (state, name) => state.playerName = name,
+    updateScore: (state, score) => state.currentScore = score
 }
 
 

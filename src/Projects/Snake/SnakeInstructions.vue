@@ -23,9 +23,9 @@
   </v-container>
 </template>
 
-<script>
+<script >
 export default {
-  name: "Instructions",
+  name: "SnakeInstructions",
   methods: {
     isTouchEnabled() {
       return (
@@ -37,4 +37,7 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+</style>
 

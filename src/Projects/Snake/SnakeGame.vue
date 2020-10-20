@@ -8,52 +8,72 @@
   >
     <v-container fluid class="pa-0">
       <!-- Instructions -->
-      <v-row class>
-        <v-col cols="12" id="instructionsContainer" class="col-md-4">
-          <BaseCard
-            @hideShow="isMobile() ? moveUp($event) : ''"
-            :style="isMobile ? 'float: right' : ''"
-            :keepTitle="true"
-            :iconRight="isMobile() ? true : false"
-            :collapsible="true"
-            title="Controls"
-          >
-            <Instructions />
-          </BaseCard>
-        </v-col>
-        <!-- Snake Canvas -->
-        <v-col
-          class="col-md-4"
-          v-if="gameState == 'setup' || gameState === 'running'"
-          id="snakeCol"
-        >
-          <BaseCard>
-            <SnakeCanvas @startGame="start" />
-          </BaseCard>
-        </v-col>
-        <v-col class="col-md-4" v-if="gameState === 'end'" id="saveScore">
-          <BaseCard>
-            <SaveScore :score="score" />
+      <v-row>
+        <v-col id="instructionsContainer" class="col-md-4 col-sm-4 col-xs-12">
+          <BaseCard title="Controls">
+            <SnakeInstructions />
           </BaseCard>
         </v-col>
 
-        <!-- ScoreBoard -->
-        <v-col>
-          <BaseCard>
-            <ScoreBoard @updateScores="updateTopScores" v-on:LoadGame="reset()" />
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          "
+          v-if="showCanvas"
+          id="snakeContainer"
+        >
+          <SnakeCanvas
+            :score="score"
+            @close="showCanvas = false"
+            @startGame="startGame"
+            v-touch="{
+              left: () => swipe('left'),
+              right: () => swipe('right'),
+              up: () => swipe('up'),
+              down: () => swipe('down'),
+            }"
+          />
+        </div>
+        <!-- Saving score -->
+        <v-col class="col-xs-12" id="saveScore">
+          <BaseCard title="Snake">
+            <PlayerScore
+              @restartGame="showCanvas = true"
+              v-if="gameState === 'end'"
+              :score="currentScore"
+            />
+            <v-layout class="fill-height" v-else justify-center align-center>
+              <BaseButton
+                class="v-size--x-large"
+                @click="showCanvas = true"
+                title="Let's Play!"
+              />
+            </v-layout>
           </BaseCard>
         </v-col>
+
+        <!-- LeaderBoard -->
+        <v-col class="col-xs-12">
+          <BaseCard title="Leaderboard">
+            <SnakeLeaderboard v-on:LoadGame="reset()" />
+          </BaseCard>
+        </v-col>
+        <!-- Snake Canvas -->
       </v-row>
     </v-container>
   </v-layout>
 </template>
 <script>
-/*eslint-disable */
 import BaseCard from "../../components/BaseCard";
+import BaseButton from "../../components/BaseButton";
 import SnakeCanvas from "./SnakeCanvas";
-import ScoreBoard from "./ScoreBoard";
-import Instructions from "./Instructions";
-import SaveScore from "./SaveScore";
+import SnakeLeaderboard from "./SnakeLeaderboard";
+import SnakeInstructions from "./SnakeInstructions";
+import PlayerScore from "./PlayerScore";
+import { roundRect, getRandomGrid } from "./helper";
 
 export default {
   name: "Snake",
@@ -61,11 +81,12 @@ export default {
     this.$store.dispatch("getSnakeScores");
   },
   components: {
-    Instructions,
+    SnakeInstructions,
     BaseCard,
+    BaseButton,
     SnakeCanvas,
-    ScoreBoard,
-    SaveScore,
+    SnakeLeaderboard,
+    PlayerScore,
   },
   data() {
     return {
@@ -90,78 +111,30 @@ export default {
       dir: "right",
       score: 0,
       controlMessage: "Start",
-      xDown: null,
-      yDown: null,
       layoutObject: {
         marginTop: "0",
       },
+      showCanvas: false,
     };
   },
   computed: {
     gameState() {
       return this.$store.state.SnakeGame.gameState;
     },
+    currentScore: {
+      get() {
+        return this.$store.state.SnakeGame.currentScore;
+      },
+      set() {
+        this.$store.commit("updateScore", this.score);
+      },
+    },
   },
   methods: {
-    moveUp(hideShow) {
-      this.layoutObject.marginTop = hideShow ? "0px" : "-50px";
-    },
-    isMobile: mobileCheck,
-    roundRect(context, x, y, width, height, radius, fill, stroke) {
-      if (typeof stroke === "undefined") {
-        stroke = true;
-      }
-      if (typeof radius === "undefined") {
-        radius = 5;
-      }
-      if (typeof radius === "number") {
-        radius = { tl: radius, tr: radius, br: radius, bl: radius };
-      } else {
-        var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-        for (var side in defaultRadius) {
-          radius[side] = radius[side] || defaultRadius[side];
-        }
-      }
-      context.beginPath();
-      context.moveTo(x + radius.tl, y);
-      context.lineTo(x + width - radius.tr, y);
-      context.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-      context.lineTo(x + width, y + height - radius.br);
-      context.quadraticCurveTo(
-        x + width,
-        y + height,
-        x + width - radius.br,
-        y + height
-      );
-      context.lineTo(x + radius.bl, y + height);
-      context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-      context.lineTo(x, y + radius.tl);
-      context.quadraticCurveTo(x, y, x + radius.tl, y);
-      context.closePath();
-      if (fill) {
-        context.fill();
-      }
-      if (stroke) {
-        context.stroke();
-      }
-    },
-    updateTopScores(newScores) {
-      return (this.topFiveScores.scores = newScores.slice(0, 5));
-    },
-    start() {
+    startGame() {
       this.score = 0;
-      // add event listener to listen for arrow key presses
+      // add event listener for arrow key presses
       window.addEventListener("keydown", this.handleGlobalKeyDown);
-      // Mobile control listeners
-      this.$el.addEventListener("touchstart", this.handleTouchStart, false);
-      this.$el.addEventListener("touchmove", this.handleTouchMove, false);
-
-      // disable Scroll for mobile
-      this.$emit("preventScroll");
-
-      // Scroll to element
-      this.$vuetify.goTo(this.$el);
-
       // find and setup canvas
       var canvas = this.$el.querySelector("canvas");
       this.canvas = canvas;
@@ -171,21 +144,44 @@ export default {
       this.controlMessage = "";
       this.showInfo = false;
 
-      this.$store.commit("startGame");
-
       // delay game start for screen to scroll to el
       setTimeout(() => {
         requestAnimationFrame(this.draw);
       }, 1000);
     },
-    getRandomGrid(max) {
-      return (
-        Math.floor(Math.random() * Math.floor(max / this.scale)) * this.scale
-      );
+    draw() {
+      if (this.gameState === "running") {
+        requestAnimationFrame(this.draw);
+      }
+      this.now = Date.now();
+      this.elapsed = this.now - this.then;
+      if (this.elapsed > 200) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.then = this.now - (this.elapsed % this.fpsInterval);
+        this.moveSnake(this.dir);
+        this.death();
+        this.eat();
+        this.drawfood();
+      }
+    },
+    swipe(dir) {
+      if (this.snake.body.length > 1) {
+        if (dir == "up" && this.dir != "down") {
+          this.dir = "up";
+        } else if (dir == "right" && this.dir != "left") {
+          this.dir = "right";
+        } else if (dir == "down" && this.dir != "up") {
+          this.dir = "down";
+        } else if (dir == "left" && this.dir != "right") {
+          this.dir = "left";
+        }
+      } else {
+        this.dir = dir;
+      }
     },
     drawfood: function () {
       this.context.fillStyle = this.food.color;
-      this.roundRect(
+      roundRect(
         this.context,
         this.food.x + 2,
         this.food.y + 2,
@@ -208,7 +204,7 @@ export default {
       this.context.fillStyle = this.snake.color;
 
       this.snake.body.forEach((body) => {
-        this.roundRect(
+        roundRect(
           this.context,
           body.x + 2,
           body.y + 2,
@@ -244,46 +240,6 @@ export default {
         );
       }
     },
-    draw() {
-      if (this.gameState === "running") {
-        requestAnimationFrame(this.draw);
-      }
-      this.now = Date.now();
-      this.elapsed = this.now - this.then;
-      if (this.elapsed > 200) {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.then = this.now - (this.elapsed % this.fpsInterval);
-        this.moveSnake(this.dir);
-        this.death();
-        this.eat();
-        this.drawfood();
-      }
-    },
-    handleGlobalKeyDown(e) {
-      var kc = e.keyCode;
-      // prevent snake from going in oppsite direction and eating self
-      if (this.snake.body.length > 1) {
-        if (kc === 38 && this.dir != "down") {
-          this.dir = "up";
-        } else if (kc === 39 && this.dir != "left") {
-          this.dir = "right";
-        } else if (kc === 40 && this.dir != "up") {
-          this.dir = "down";
-        } else if (kc === 37 && this.dir != "right") {
-          this.dir = "left";
-        }
-      } else {
-        if (kc === 38) {
-          this.dir = "up";
-        } else if (kc === 39) {
-          this.dir = "right";
-        } else if (kc === 40) {
-          this.dir = "down";
-        } else if (kc === 37) {
-          this.dir = "left";
-        }
-      }
-    },
     eat() {
       if (
         this.snake.body[this.score].x === this.food.x &&
@@ -303,8 +259,8 @@ export default {
       return foodok;
     },
     newFood() {
-      this.food.x = this.getRandomGrid(this.width);
-      this.food.y = this.getRandomGrid(this.height);
+      this.food.x = getRandomGrid(this.width, this.scale);
+      this.food.y = getRandomGrid(this.height, this.scale);
 
       if (this.checkFood()) {
         return;
@@ -312,13 +268,9 @@ export default {
       this.newFood();
     },
     die() {
-      // re-enable scroll for mobile
-      let app = document.getElementById("app");
-      app.style.touchAction = "unset";
-
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      this.$store.commit("endGame");
+      this.showCanvas = false;
+      this.$store.dispatch("endGame", this.score);
 
       // resetting game
       this.snake.body = [{ x: 0, y: 0 }];
@@ -366,65 +318,30 @@ export default {
     reset() {
       this.$store.commit("resetGame");
     },
-    getTouches(evt) {
-      return evt.touches || evt.originalEvent.touches;
-    },
-    handleTouchStart(evt) {
-      const firstTouch = this.getTouches(evt)[0];
-      this.xDown = firstTouch.clientX;
-      this.yDown = firstTouch.clientY;
-    },
-    handleTouchMove(evt) {
-      let length = this.snake.body.length;
-      if (!this.xDown || !this.yDown) {
-        return;
-      }
-
-      var xUp = evt.touches[0].clientX;
-      var yUp = evt.touches[0].clientY;
-
-      var xDiff = this.xDown - xUp;
-      var yDiff = this.yDown - yUp;
-
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        /*most significant*/
-        if (xDiff > 0) {
-          /* left swipe */
-
-          // TODO doesn't prevent snake from going in opposite direction
-          if (length > 1 && this.dir != "right") {
-            this.dir = "left";
-          } else {
-            this.dir = "left";
-          }
-        } else {
-          /* right swipe */
-          if (length > 1 && this.dir != "left") {
-            this.dir = "right";
-          } else {
-            this.dir = "right";
-          }
+    handleGlobalKeyDown(e) {
+      var kc = e.keyCode;
+      // prevent snake from going in oppsite direction and eating self
+      if (this.snake.body.length > 1) {
+        if (kc === 38 && this.dir != "down") {
+          this.dir = "up";
+        } else if (kc === 39 && this.dir != "left") {
+          this.dir = "right";
+        } else if (kc === 40 && this.dir != "up") {
+          this.dir = "down";
+        } else if (kc === 37 && this.dir != "right") {
+          this.dir = "left";
         }
       } else {
-        if (yDiff > 0) {
-          /* up swipe */
-          if (length > 1 && this.dir != "down") {
-            this.dir = "up";
-          } else {
-            this.dir = "up";
-          }
-        } else {
-          /* down swipe */
-          if (length > 1 && this.dir != "up") {
-            this.dir = "down";
-          } else {
-            this.dir = "down";
-          }
+        if (kc === 38) {
+          this.dir = "up";
+        } else if (kc === 39) {
+          this.dir = "right";
+        } else if (kc === 40) {
+          this.dir = "down";
+        } else if (kc === 37) {
+          this.dir = "left";
         }
       }
-      /* reset values */
-      this.xDown = null;
-      this.yDown = null;
     },
     currentThemeColor() {
       this.snake.color = this.$vuetify.theme.currentTheme.primary;
@@ -433,5 +350,16 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
+#snakeContainer {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  display: table;
+  transition: opacity 0.3s ease;
+}
 </style>
