@@ -35,15 +35,6 @@ const routes = [{
         /* webpackChunkName: "snake" */
         "../Projects/Snake/SnakeGame.vue"
       ),
-  },
- {
-    path: "/Synth",
-    name: "Synth",
-    component: () =>
-      import(
-        /* webpackChunkName: "synth" */
-        "../Projects/Synth/Synth.vue"
-      ),
   }
 ];
 
